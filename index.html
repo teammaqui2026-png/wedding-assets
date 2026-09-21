@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lawrence & Sharmaine | Wedding Invitation</title>
   
-  <!-- Custom "L&S" Luxury Browser Tab Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231A2B49' stroke='%23DDA5A5' stroke-width='4'/><text x='50' y='58' font-family='Georgia, serif' font-size='32' font-weight='bold' fill='%23FFFFFF' text-anchor='middle' dominant-baseline='middle'>L&amp;S</text></svg>">
+  <!-- Fully-Encoded Luxury "L+S" Tab Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231A2B49' stroke='%23DDA5A5' stroke-width='5'/%3E%3Ctext x='50' y='57' font-family='Georgia, serif' font-size='34' font-weight='bold' fill='%23FFFFFF' text-anchor='middle' dominant-baseline='middle'%3EL%2BS%3C/text%3E%3C/svg%3E">
 
   <!-- Google Fonts: Cormorant Garamond + Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -954,9 +954,7 @@
       white-space: pre-line;
     }
 
-    /* ========================================================
-       SENIOR-FRIENDLY RSVP (BOLD 2PX BORDERS, DYNAMIC +1 / +2)
-       ======================================================== */
+    /* --- Senior-Friendly RSVP --- */
     .form-group {
       text-align: left;
       margin-bottom: 24px;
@@ -967,17 +965,16 @@
       font-size: 0.82rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-weight: 700; /* Darker, clearer for elderly relatives */
+      font-weight: 700;
       color: #101B2E;
       margin-bottom: 8px;
     }
 
-    /* Bold 2px High-Contrast Inputs */
     input, select, textarea {
       width: 100%;
       padding: 15px 18px;
       border-radius: 14px;
-      border: 2px solid #C8B8A6; /* Bold 2px border */
+      border: 2px solid #C8B8A6;
       background-color: #FFFFFF;
       font-family: 'Montserrat', sans-serif;
       font-size: 0.98rem;
@@ -998,9 +995,8 @@
       gap: 14px;
     }
 
-    /* Bold Attendance Cards */
     .attend-card {
-      border: 2px solid #C8B8A6; /* Bold border */
+      border: 2px solid #C8B8A6;
       border-radius: 16px;
       padding: 18px 12px;
       text-align: center;
@@ -1036,7 +1032,6 @@
       transform: translateY(-2px);
     }
 
-    /* Companion Input Boxes */
     .companion-input-wrap {
       margin-top: 10px;
     }
@@ -1386,7 +1381,6 @@
         </div>
       </div>
 
-      <!-- Add to Calendar Button -->
       <div>
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
@@ -1400,7 +1394,6 @@
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
       
-      <!-- Event Blocks with Live GPS Links -->
       <div class="event-grid">
         <div class="event-block">
           <div class="event-icon-circle">
@@ -1519,7 +1512,7 @@
       </div>
     </section>
 
-    <!-- 6. SENIOR-FRIENDLY RSVP FORM (BOLD 2PX BORDERS + DYNAMIC COMPANIONS) -->
+    <!-- 6. SENIOR-FRIENDLY RSVP FORM -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
       <h2>RSVP</h2>
@@ -1544,13 +1537,11 @@
 
       <!-- Main Form -->
       <form id="rsvpForm" class="rsvp-fade-panel">
-        <!-- 1. Full Name -->
         <div class="form-group">
           <label>Your Full Name</label>
           <input type="text" id="guestName" placeholder="e.g. Juan Dela Cruz" required />
         </div>
 
-        <!-- 2. Attendance Selection -->
         <div class="form-group">
           <label>Will you be attending?</label>
           <div class="attendance-cards">
@@ -1568,7 +1559,6 @@
           </div>
         </div>
 
-        <!-- 3. Total Seats (1, 2, or 3) -->
         <div class="form-group" id="seatsGroup">
           <label>Total Number of Seats Reserved</label>
           <select id="seatCountSelect">
@@ -1578,13 +1568,11 @@
           </select>
         </div>
 
-        <!-- 4. Dynamic Companion Name Fields -->
         <div class="form-group" id="companionFieldsGroup" style="display: none;">
           <label id="companionLabel">Companion's Full Name</label>
           <div id="companionInputsContainer"></div>
         </div>
 
-        <!-- 5. Message & Wishes -->
         <div class="form-group">
           <label>Message for the Couple / Song Request</label>
           <textarea id="message" rows="3" placeholder="Leave a wish or a song that gets you on the dance floor..."></textarea>
@@ -1609,6 +1597,46 @@
   </div>
 
   <script>
+    // --- DYNAMIC "L+S" CANVAS FAVICON INJECTOR (Instant Browser Tab Logo) ---
+    function setCustomFavicon() {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        
+        // Midnight Navy Circle
+        ctx.beginPath();
+        ctx.arc(32, 32, 29, 0, 2 * Math.PI);
+        ctx.fillStyle = '#1A2B49';
+        ctx.fill();
+        
+        // Rose-Gold Border Ring
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#DDA5A5';
+        ctx.stroke();
+
+        // White "L+S" Text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 22px Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('L+S', 32, 33.5);
+
+        // Apply as Favicon
+        let link = document.querySelector("link[rel*='icon']");
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'icon';
+          document.head.appendChild(link);
+        }
+        link.href = canvas.toDataURL('image/png');
+      } catch (e) {
+        console.log("Favicon error:", e);
+      }
+    }
+    setCustomFavicon();
+
     // --- LIVE GOOGLE APPS SCRIPT API INTEGRATION ---
     const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwwWFCoCa89gJqEOp65QY7cm-afjpiFJn1c4miWINlBKT_az-E8bKmMLkF177jzPbxG/exec";
 
@@ -1836,7 +1864,7 @@
       if (!isNaN(diff) && diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
         const dEl = document.getElementById("days");
@@ -1886,7 +1914,6 @@
       btnSpinner.style.display = "inline-block";
       btnSubmitText.innerText = "Saving Your RSVP...";
 
-      // Collect companion names
       const companionInputs = document.querySelectorAll('.companion-name-input');
       const companionNamesList = [];
       companionInputs.forEach(input => {
