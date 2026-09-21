@@ -341,7 +341,7 @@
       align-items: center;
       justify-content: flex-start;
       text-align: center;
-      background-image: url('hero.jpg');
+      background-image: url('https://i.imgur.com/DeCF3mR.jpeg');
       background-size: cover;
       background-position: center 60%;
       background-repeat: no-repeat;
@@ -1110,7 +1110,7 @@
 </head>
 <body>
 
-  <!-- Fullscreen Opening Envelope -->
+  <!-- Fullscreen Opening Envelope Screen -->
   <div class="envelope-screen" id="envelopeScreen">
     <div class="envelope-stage" id="envelopeStage" title="Tap Wax Seal to Open">
       <div class="env-back"></div>
@@ -1150,8 +1150,9 @@
     <span id="musicText">Music</span>
   </div>
 
+  <!-- Piano Audio Track -->
   <audio id="weddingAudio" loop preload="auto">
-    <source src="You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
+    <source src="https://raw.githubusercontent.com/teammaqui2026-png/wedding-assets/main/You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
   </audio>
 
   <!-- Hero Section -->
@@ -1169,7 +1170,7 @@
         Lawrence <span class="amp">&</span> Sharmaine
       </h1>
       
-      <p class="hero-date" id="heroDate">Saturday, December 19, 2026 • Quezon City, Philippines</p>
+      <p class="hero-date" id="heroDate">SATURDAY, DECEMBER 19, 2026 • QUEZON CITY, PHILIPPINES</p>
     </div>
 
     <a href="#story" class="scroll-down">
@@ -1232,15 +1233,15 @@
 
       <div class="gallery-grid">
         <div class="gallery-polaroid">
-          <img src="hero.jpg" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
           <p class="polaroid-caption">Where Love Began</p>
         </div>
         <div class="gallery-polaroid">
-          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" id="galleryPhoto2" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto2" alt="Engagement photo">
           <p class="polaroid-caption">Hand in Hand</p>
         </div>
         <div class="gallery-polaroid">
-          <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=600&q=80" id="galleryPhoto3" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto3" alt="Engagement photo">
           <p class="polaroid-caption">Forever Ahead</p>
         </div>
       </div>
@@ -1257,6 +1258,7 @@
         <span class="flourish-line"></span>
       </div>
       
+      <!-- Countdown Timer -->
       <div class="countdown-editorial">
         <div class="timer-unit">
           <span class="timer-num" id="days">00</span>
@@ -1279,6 +1281,7 @@
         </div>
       </div>
 
+      <!-- Add to Calendar Concierge Button -->
       <div>
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
@@ -1292,6 +1295,7 @@
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
       
+      <!-- Event Blocks with Live GPS Links -->
       <div class="event-grid">
         <div class="event-block">
           <div class="event-icon-circle">
@@ -1389,15 +1393,23 @@
         </div>
         <div class="entourage-group">
           <p class="entourage-role">Principal Sponsors</p>
-          <p class="entourage-names">Honored Ninongs & Ninangs<br>Guiding us with wisdom and love as we enter marriage.</p>
+          <p class="entourage-names">Honored Ninongs & Ninangs</p>
         </div>
         <div class="entourage-group">
           <p class="entourage-role">Best Man & Maid of Honor</p>
-          <p class="entourage-names">Best Man • Maid of Honor</p>
+          <p class="entourage-names">Best Man Name • Maid of Honor Name</p>
         </div>
         <div class="entourage-group">
           <p class="entourage-role">Groomsmen & Bridesmaids</p>
           <p class="entourage-names">Our dearest brothers, sisters, and lifelong friends.</p>
+        </div>
+        <div class="entourage-group">
+          <p class="entourage-role">Secondary Sponsors</p>
+          <p class="entourage-names">Candle, Veil, and Cord Sponsors</p>
+        </div>
+        <div class="entourage-group">
+          <p class="entourage-role">Bearers & Flower Girls</p>
+          <p class="entourage-names">Ring Bearer • Bible Bearer • Coin Bearer</p>
         </div>
       </div>
     </section>
@@ -1471,7 +1483,6 @@
         .then(data => {
           const cfg = data.config || {};
           
-          // Update texts if set in sheet
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
@@ -1513,7 +1524,7 @@
 
           // Update Countdown Target
           if (cfg.Countdown_Target) {
-            weddingDate = new Date(cfg.Countdown_Target).getTime();
+            weddingDate = new Date(cfg.Countdown_Target.replace(' ', 'T')).getTime();
             updateCountdown();
           }
 
