@@ -951,7 +951,7 @@
       white-space: pre-line;
     }
 
-    /* RSVP Form */
+    /* --- RSVP Form & Smooth Transitions --- */
     .form-group {
       text-align: left;
       margin-bottom: 22px;
@@ -1028,6 +1028,7 @@
       transform: translateY(-2px);
     }
 
+    /* Button with Spinner Support */
     .btn-submit {
       width: 100%;
       padding: 17px;
@@ -1043,6 +1044,10 @@
       transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
       margin-top: 10px;
       box-shadow: 0 6px 18px rgba(221, 165, 165, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     .btn-submit:hover {
@@ -1052,22 +1057,72 @@
     }
 
     .btn-submit:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
+      background-color: #c98e8e;
+      cursor: wait;
       transform: none;
-      box-shadow: none;
     }
 
+    /* Button Spinner */
+    .btn-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Velvet Cross-Fade Animation */
+    .rsvp-fade-panel {
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.97);
+      pointer-events: none;
+    }
+
+    .fade-in {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Success Card */
     #successModal {
       display: none;
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 20px 20px;
     }
 
     .heart-icon {
       font-size: 2.5rem;
       color: var(--pink-accent);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* Submit Another Button */
+    .btn-resubmit {
+      margin-top: 26px;
+      background: none;
+      border: 1px solid var(--beige-border);
+      border-radius: 50px;
+      padding: 10px 24px;
+      color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-resubmit:hover {
+      border-color: var(--pink-accent);
+      background: var(--pink-soft);
+      transform: translateY(-2px);
     }
 
     footer {
@@ -1110,7 +1165,7 @@
 </head>
 <body>
 
-  <!-- Fullscreen Opening Envelope Screen -->
+  <!-- Fullscreen Opening Envelope -->
   <div class="envelope-screen" id="envelopeScreen">
     <div class="envelope-stage" id="envelopeStage" title="Tap Wax Seal to Open">
       <div class="env-back"></div>
@@ -1233,7 +1288,7 @@
 
       <div class="gallery-grid">
         <div class="gallery-polaroid">
-          <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto1" alt="Engagement photo">
           <p class="polaroid-caption">Where Love Began</p>
         </div>
         <div class="gallery-polaroid">
@@ -1414,7 +1469,7 @@
       </div>
     </section>
 
-    <!-- 6. Clean RSVP Form -->
+    <!-- 6. RSVP Form with Smooth Cross-Fade & Resubmit -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
       <h2>RSVP</h2>
@@ -1427,13 +1482,18 @@
       
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 26px;" id="rsvpDeadline">Kindly respond until November 30, 2026</p>
 
-      <div id="successModal">
+      <!-- Success Screen with 'Submit Another' option -->
+      <div id="successModal" class="rsvp-fade-panel">
         <div class="heart-icon">❦</div>
-        <h2 style="font-size: 2.2rem;">Thank You!</h2>
-        <p style="color: var(--text-muted); margin-top: 10px;">Your response has been saved. We look forward to celebrating together!</p>
+        <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Thank You!</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 440px; margin: 0 auto;">Your response has been saved. We look forward to celebrating together!</p>
+        <button type="button" class="btn-resubmit" id="btnResubmit">
+          <span>+ Submit Another RSVP</span>
+        </button>
       </div>
 
-      <form id="rsvpForm">
+      <!-- Form Panel -->
+      <form id="rsvpForm" class="rsvp-fade-panel">
         <div class="form-group">
           <label>Full Name</label>
           <input type="text" id="guestName" placeholder="e.g. Juan Dela Cruz" required />
@@ -1461,7 +1521,10 @@
           <textarea id="message" rows="3" placeholder="Leave a wish or a song that gets you on the dance floor..."></textarea>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">Send My RSVP</button>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-spinner" id="btnSpinner"></span>
+          <span id="btnSubmitText">Send My RSVP</span>
+        </button>
       </form>
     </section>
 
@@ -1659,12 +1722,21 @@
       }
     }
 
-    // 8. Send RSVP directly to Google Sheet
-    document.getElementById("rsvpForm").addEventListener("submit", function(e) {
+    // 8. Smooth RSVP Submit & Resubmit Flow
+    const form = document.getElementById("rsvpForm");
+    const successModal = document.getElementById("successModal");
+    const btn = document.getElementById("submitBtn");
+    const btnSpinner = document.getElementById("btnSpinner");
+    const btnSubmitText = document.getElementById("btnSubmitText");
+
+    // Form Submit
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
-      const btn = document.getElementById("submitBtn");
-      btn.innerText = "Saving your RSVP...";
+      
+      // Start responsive button loading state
       btn.disabled = true;
+      btnSpinner.style.display = "inline-block";
+      btnSubmitText.innerText = "Saving Your RSVP...";
 
       const data = {
         name: document.getElementById("guestName").value,
@@ -1678,14 +1750,51 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       }).then(() => {
-        document.getElementById("rsvpForm").style.display = "none";
-        document.getElementById("successModal").style.display = "block";
-        triggerRosePetals();
+        // Smooth cross-fade transition to Thank You
+        form.classList.add("fade-out");
+        
+        setTimeout(() => {
+          form.style.display = "none";
+          form.classList.remove("fade-out");
+          
+          successModal.style.display = "block";
+          successModal.classList.add("fade-in");
+          
+          triggerRosePetals();
+        }, 400);
+
       }).catch(err => {
         alert("Something went wrong while submitting. Please try again!");
-        btn.innerText = "Send My RSVP";
         btn.disabled = false;
+        btnSpinner.style.display = "none";
+        btnSubmitText.innerText = "Send My RSVP";
       });
+    });
+
+    // Submit Another RSVP Handler
+    document.getElementById("btnResubmit").addEventListener("click", function() {
+      // Smooth fade out of success modal
+      successModal.classList.remove("fade-in");
+      successModal.classList.add("fade-out");
+
+      setTimeout(() => {
+        successModal.style.display = "none";
+        successModal.classList.remove("fade-out");
+
+        // Reset form inputs & button
+        document.getElementById("guestName").value = "";
+        document.getElementById("message").value = "";
+        setAttendance(document.querySelectorAll('.attend-card')[0], 'Joyfully Accepts');
+        
+        btn.disabled = false;
+        btnSpinner.style.display = "none";
+        btnSubmitText.innerText = "Send My RSVP";
+
+        // Smooth fade in of form
+        form.style.display = "block";
+        form.classList.add("fade-in");
+        setTimeout(() => form.classList.remove("fade-in"), 400);
+      }, 350);
     });
   </script>
 </body>
