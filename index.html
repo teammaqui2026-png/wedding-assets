@@ -560,7 +560,7 @@
       line-height: 1;
     }
 
-    /* Timeline */
+    /* --- DYNAMIC TIMELINE --- */
     .timeline-wrapper {
       position: relative;
       margin: 20px 0 10px;
@@ -623,11 +623,11 @@
       margin: 0 auto;
     }
 
-    /* Gallery */
+    /* --- DYNAMIC GALLERY GRID --- */
     .gallery-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
       margin: 20px 0 10px;
     }
 
@@ -646,7 +646,7 @@
 
     .gallery-polaroid img {
       width: 100%;
-      height: 150px;
+      height: 170px;
       object-fit: cover;
       border-radius: 8px;
       display: block;
@@ -932,7 +932,7 @@
     }
 
     .entourage-content.is-open {
-      max-height: 2500px;
+      max-height: 3000px;
     }
 
     .entourage-group {
@@ -1123,7 +1123,7 @@
       transform: translateY(-2px);
     }
 
-    /* --- POLISHED LUXURY FOOTER --- */
+    /* Footer */
     footer {
       text-align: center;
       padding: 50px 20px 80px;
@@ -1195,8 +1195,8 @@
       .countdown-editorial { gap: 10px; padding: 10px 14px; }
       .timer-num { font-size: 1.8rem; }
       .timer-unit { min-width: 40px; }
-      .gallery-grid { grid-template-columns: 1fr; }
-      .gallery-polaroid img { height: 210px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-polaroid img { height: 140px; }
       .monogram-seal { width: 60px; height: 60px; }
       .seal-letters { font-size: 1.2rem; }
       .palette-row { gap: 10px; }
@@ -1280,7 +1280,7 @@
   <!-- Content Container -->
   <div class="container" id="story">
     
-    <!-- 1. OUR STORY: Milestones Timeline -->
+    <!-- 1. DYNAMIC OUR STORY TIMELINE -->
     <section class="card reveal-card">
       <span class="section-eyebrow">How It All Began</span>
       <h2>Our Story</h2>
@@ -1291,34 +1291,32 @@
         <span class="flourish-line"></span>
       </div>
 
-      <div class="timeline-wrapper">
+      <!-- Auto-generated from 'Story' sheet tab -->
+      <div class="timeline-wrapper" id="timelineWrapper">
         <div class="timeline-item">
-          <div class="timeline-year-pill" id="story1Year">2018</div>
-          <h3 class="timeline-title" id="story1Title">The First Hello</h3>
-          <p class="timeline-desc" id="story1Text">What began as a simple conversation quickly turned into shared laughter, late-night talks, and the quiet realization that we had found something rare.</p>
+          <div class="timeline-year-pill">2018</div>
+          <h3 class="timeline-title">The First Hello</h3>
+          <p class="timeline-desc">What began as a simple conversation quickly turned into shared laughter, late-night talks, and the quiet realization that we had found something rare.</p>
         </div>
-
         <div class="timeline-item">
-          <div class="timeline-year-pill" id="story2Year">2021</div>
-          <h3 class="timeline-title" id="story2Title">Adventures & Growing Together</h3>
-          <p class="timeline-desc" id="story2Text">Through career milestones, spontaneous weekend trips, and navigating life side by side, we learned that home isn't a place—it's each other.</p>
+          <div class="timeline-year-pill">2021</div>
+          <h3 class="timeline-title">Adventures & Growing Together</h3>
+          <p class="timeline-desc">Through career milestones, spontaneous weekend trips, and navigating life side by side, we learned that home isn't a place—it's each other.</p>
         </div>
-
         <div class="timeline-item">
-          <div class="timeline-year-pill" id="story3Year">2024</div>
-          <h3 class="timeline-title" id="story3Title">She Said Yes</h3>
-          <p class="timeline-desc" id="story3Text">With full hearts and a promise for the future, Lawrence asked the easiest question Sharmaine ever had to answer.</p>
+          <div class="timeline-year-pill">2024</div>
+          <h3 class="timeline-title">She Said Yes</h3>
+          <p class="timeline-desc">With full hearts and a promise for the future, Lawrence asked the easiest question Sharmaine ever had to answer.</p>
         </div>
-
         <div class="timeline-item">
-          <div class="timeline-year-pill" id="story4Year">2026</div>
-          <h3 class="timeline-title" id="story4Title">Our Forever Begins</h3>
-          <p class="timeline-desc" id="story4Text">Surrounded by God's grace and our dearest family and friends, we begin the greatest chapter of our lives together.</p>
+          <div class="timeline-year-pill">2026</div>
+          <h3 class="timeline-title">Our Forever Begins</h3>
+          <p class="timeline-desc">Surrounded by God's grace and our dearest family and friends, we begin the greatest chapter of our lives together.</p>
         </div>
       </div>
     </section>
 
-    <!-- 2. MINI ENGAGEMENT PHOTO LOOKBOOK -->
+    <!-- 2. DYNAMIC MINI ENGAGEMENT PHOTO LOOKBOOK -->
     <section class="card reveal-card">
       <span class="section-eyebrow">Captured Moments</span>
       <h2>Our Journey</h2>
@@ -1329,17 +1327,18 @@
         <span class="flourish-line"></span>
       </div>
 
-      <div class="gallery-grid">
+      <!-- Auto-generated from 'Gallery' sheet tab -->
+      <div class="gallery-grid" id="galleryGrid">
         <div class="gallery-polaroid">
-          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto1" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
           <p class="polaroid-caption">Where Love Began</p>
         </div>
         <div class="gallery-polaroid">
-          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto2" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
           <p class="polaroid-caption">Hand in Hand</p>
         </div>
         <div class="gallery-polaroid">
-          <img src="https://i.imgur.com/DeCF3mR.jpeg" id="galleryPhoto3" alt="Engagement photo">
+          <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
           <p class="polaroid-caption">Forever Ahead</p>
         </div>
       </div>
@@ -1356,7 +1355,7 @@
         <span class="flourish-line"></span>
       </div>
       
-      <!-- Continuous Live Countdown -->
+      <!-- Countdown Timer -->
       <div class="countdown-editorial">
         <div class="timer-unit">
           <span class="timer-num" id="days">00</span>
@@ -1581,19 +1580,16 @@
   </div>
 
   <script>
-    // --- LIVE GOOGLE APPS SCRIPT WEB APP INTEGRATION ---
+    // --- LIVE GOOGLE APPS SCRIPT API INTEGRATION ---
     const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwwWFCoCa89gJqEOp65QY7cm-afjpiFJn1c4miWINlBKT_az-E8bKmMLkF177jzPbxG/exec";
 
-    // Standard initial wedding date timestamp (Dec 19, 2026 2:00 PM)
     let weddingDate = new Date("December 19, 2026 14:00:00").getTime();
 
-    // Smart Date Parser that handles any format typed into Google Sheets safely
     function parseDateSafe(dateString) {
       if (!dateString) return null;
       let d = new Date(dateString);
       if (!isNaN(d.getTime())) return d.getTime();
 
-      // Normalize '2026-12-19 2:00:00' -> '2026/12/19 02:00:00'
       let normalized = dateString.trim().replace(/-/g, '/');
       d = new Date(normalized);
       if (!isNaN(d.getTime())) return d.getTime();
@@ -1601,24 +1597,19 @@
       return null;
     }
 
-    // 1. Live Fetch Sheet Data (Config, Photos & Entourage) with Cache-Buster
+    // 1. Live Fetch Sheet Data (Config, Photos, Entourage, Story & Gallery)
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
           
-          // Hero Photo
+          // Dynamic Hero Photo
           if (cfg.Hero_Image_URL) {
             document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
           }
 
-          // Lookbook Photos
-          if (cfg.Gallery_Photo_1) document.getElementById('galleryPhoto1').src = cfg.Gallery_Photo_1;
-          if (cfg.Gallery_Photo_2) document.getElementById('galleryPhoto2').src = cfg.Gallery_Photo_2;
-          if (cfg.Gallery_Photo_3) document.getElementById('galleryPhoto3').src = cfg.Gallery_Photo_3;
-
-          // Names
+          // Dynamic Text Settings
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
@@ -1630,23 +1621,6 @@
           if (cfg.Hero_Subtitle) document.getElementById('heroSub').innerText = cfg.Hero_Subtitle;
           if (cfg.Event_Date_Display) document.getElementById('heroDate').innerText = cfg.Event_Date_Display;
           
-          // Story Milestones
-          if (cfg.Story_1_Year) document.getElementById('story1Year').innerText = cfg.Story_1_Year;
-          if (cfg.Story_1_Title) document.getElementById('story1Title').innerText = cfg.Story_1_Title;
-          if (cfg.Story_1_Text) document.getElementById('story1Text').innerText = cfg.Story_1_Text;
-
-          if (cfg.Story_2_Year) document.getElementById('story2Year').innerText = cfg.Story_2_Year;
-          if (cfg.Story_2_Title) document.getElementById('story2Title').innerText = cfg.Story_2_Title;
-          if (cfg.Story_2_Text) document.getElementById('story2Text').innerText = cfg.Story_2_Text;
-
-          if (cfg.Story_3_Year) document.getElementById('story3Year').innerText = cfg.Story_3_Year;
-          if (cfg.Story_3_Title) document.getElementById('story3Title').innerText = cfg.Story_3_Title;
-          if (cfg.Story_3_Text) document.getElementById('story3Text').innerText = cfg.Story_3_Text;
-
-          if (cfg.Story_4_Year) document.getElementById('story4Year').innerText = cfg.Story_4_Year;
-          if (cfg.Story_4_Title) document.getElementById('story4Title').innerText = cfg.Story_4_Title;
-          if (cfg.Story_4_Text) document.getElementById('story4Text').innerText = cfg.Story_4_Text;
-
           // Event details
           if (cfg.Ceremony_Time) document.getElementById('ceremonyTime').innerText = cfg.Ceremony_Time;
           if (cfg.Ceremony_Venue) document.getElementById('ceremonyVenue').innerText = cfg.Ceremony_Venue;
@@ -1658,7 +1632,7 @@
           if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
           if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
 
-          // Bulletproof Countdown Sync
+          // Countdown
           if (cfg.Countdown_Target) {
             const parsedTarget = parseDateSafe(cfg.Countdown_Target);
             if (parsedTarget) {
@@ -1669,10 +1643,33 @@
 
           if (cfg.RSVP_Deadline) document.getElementById('rsvpDeadline').innerText = cfg.RSVP_Deadline;
 
-          // Entourage
+          // DYNAMIC STORY MILESTONES (Renders any number of rows from 'Story' tab)
+          if (data.story && data.story.length > 0) {
+            const timelineContainer = document.getElementById('timelineWrapper');
+            timelineContainer.innerHTML = data.story.map(item => `
+              <div class="timeline-item">
+                <div class="timeline-year-pill">${item.year}</div>
+                <h3 class="timeline-title">${item.title}</h3>
+                <p class="timeline-desc">${item.story}</p>
+              </div>
+            `).join('');
+          }
+
+          // DYNAMIC GALLERY LOOKBOOK (Renders any number of photos from 'Gallery' tab)
+          if (data.gallery && data.gallery.length > 0) {
+            const galleryContainer = document.getElementById('galleryGrid');
+            galleryContainer.innerHTML = data.gallery.map(item => `
+              <div class="gallery-polaroid">
+                <img src="${item.url}" alt="${item.caption || 'Engagement Photo'}">
+                <p class="polaroid-caption">${item.caption || ''}</p>
+              </div>
+            `).join('');
+          }
+
+          // DYNAMIC ENTOURAGE (Renders any number of groups from 'Entourage' tab)
           if (data.entourage && data.entourage.length > 0) {
-            const container = document.getElementById('entourageContent');
-            container.innerHTML = data.entourage.map(item => `
+            const entourageContainer = document.getElementById('entourageContent');
+            entourageContainer.innerHTML = data.entourage.map(item => `
               <div class="entourage-group">
                 <p class="entourage-role">${item.role}</p>
                 <p class="entourage-names">${item.names}</p>
@@ -1764,7 +1761,7 @@
       selectedAttendance = val;
     }
 
-    // 6. CONTINUOUS, NON-STOP COUNTDOWN TIMER
+    // 6. Non-Stop Countdown Timer
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
@@ -1786,8 +1783,6 @@
         if (sEl) sEl.innerText = String(secs).padStart(2, '0');
       }
     }
-    
-    // Starts timer ticking every second continuously
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
