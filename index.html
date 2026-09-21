@@ -1250,7 +1250,7 @@
 
   <!-- Audio -->
   <audio id="weddingAudio" loop preload="auto">
-    <source src="You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
+    <source src="https://raw.githubusercontent.com/teammaqui2026-png/wedding-assets/main/You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
   </audio>
 
   <!-- Hero Section -->
@@ -1356,7 +1356,7 @@
         <span class="flourish-line"></span>
       </div>
       
-      <!-- Countdown Timer -->
+      <!-- Continuous Live Countdown -->
       <div class="countdown-editorial">
         <div class="timer-unit">
           <span class="timer-num" id="days">00</span>
@@ -1487,7 +1487,7 @@
       <div class="entourage-content" id="entourageContent">
         <div class="entourage-group">
           <p class="entourage-role">Parents of the Groom & Bride</p>
-          <p class="entourage-names">Mr. & Mrs. Maqui • Mr. & Mrs. Dela Cruz</p>
+          <p class="entourage-names">Mr. Pepito Maqui & Mrs. Imelda Maqui • Mr. Arnold Torre & Mrs. Neneth Torre</p>
         </div>
         <div class="entourage-group">
           <p class="entourage-role">Principal Sponsors</p>
@@ -1584,7 +1584,22 @@
     // --- LIVE GOOGLE APPS SCRIPT WEB APP INTEGRATION ---
     const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwwWFCoCa89gJqEOp65QY7cm-afjpiFJn1c4miWINlBKT_az-E8bKmMLkF177jzPbxG/exec";
 
+    // Standard initial wedding date timestamp (Dec 19, 2026 2:00 PM)
     let weddingDate = new Date("December 19, 2026 14:00:00").getTime();
+
+    // Smart Date Parser that handles any format typed into Google Sheets safely
+    function parseDateSafe(dateString) {
+      if (!dateString) return null;
+      let d = new Date(dateString);
+      if (!isNaN(d.getTime())) return d.getTime();
+
+      // Normalize '2026-12-19 2:00:00' -> '2026/12/19 02:00:00'
+      let normalized = dateString.trim().replace(/-/g, '/');
+      d = new Date(normalized);
+      if (!isNaN(d.getTime())) return d.getTime();
+
+      return null;
+    }
 
     // 1. Live Fetch Sheet Data (Config, Photos & Entourage) with Cache-Buster
     function syncSheetData() {
@@ -1593,12 +1608,12 @@
         .then(data => {
           const cfg = data.config || {};
           
-          // DYNAMIC HERO PHOTO FROM GOOGLE SHEET:
+          // Hero Photo
           if (cfg.Hero_Image_URL) {
             document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
           }
 
-          // DYNAMIC LOOKBOOK PHOTOS:
+          // Lookbook Photos
           if (cfg.Gallery_Photo_1) document.getElementById('galleryPhoto1').src = cfg.Gallery_Photo_1;
           if (cfg.Gallery_Photo_2) document.getElementById('galleryPhoto2').src = cfg.Gallery_Photo_2;
           if (cfg.Gallery_Photo_3) document.getElementById('galleryPhoto3').src = cfg.Gallery_Photo_3;
@@ -1643,15 +1658,18 @@
           if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
           if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
 
-          // Countdown Target
+          // Bulletproof Countdown Sync
           if (cfg.Countdown_Target) {
-            weddingDate = new Date(cfg.Countdown_Target.replace(' ', 'T')).getTime();
-            updateCountdown();
+            const parsedTarget = parseDateSafe(cfg.Countdown_Target);
+            if (parsedTarget) {
+              weddingDate = parsedTarget;
+              updateCountdown();
+            }
           }
 
           if (cfg.RSVP_Deadline) document.getElementById('rsvpDeadline').innerText = cfg.RSVP_Deadline;
 
-          // Live Entourage from 'Entourage' sheet tab
+          // Entourage
           if (data.entourage && data.entourage.length > 0) {
             const container = document.getElementById('entourageContent');
             container.innerHTML = data.entourage.map(item => `
@@ -1746,18 +1764,30 @@
       selectedAttendance = val;
     }
 
-    // 6. Countdown Timer
+    // 6. CONTINUOUS, NON-STOP COUNTDOWN TIMER
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
 
-      if (diff > 0) {
-        document.getElementById("days").innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
-        document.getElementById("hours").innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-        document.getElementById("mins").innerText = String(Math.floor((diff % (1000 * 60)) / (1000 * 60))).padStart(2, '0');
-        document.getElementById("secs").innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      if (!isNaN(diff) && diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        const dEl = document.getElementById("days");
+        const hEl = document.getElementById("hours");
+        const mEl = document.getElementById("mins");
+        const sEl = document.getElementById("secs");
+
+        if (dEl) dEl.innerText = String(days).padStart(2, '0');
+        if (hEl) hEl.innerText = String(hours).padStart(2, '0');
+        if (mEl) mEl.innerText = String(mins).padStart(2, '0');
+        if (sEl) sEl.innerText = String(secs).padStart(2, '0');
       }
     }
+    
+    // Starts timer ticking every second continuously
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
