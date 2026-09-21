@@ -11,7 +11,7 @@
   <!-- Google Fonts: Cormorant Garamond + Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Rose Petals Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -560,7 +560,7 @@
       line-height: 1;
     }
 
-    /* --- DYNAMIC TIMELINE --- */
+    /* Timeline */
     .timeline-wrapper {
       position: relative;
       margin: 20px 0 10px;
@@ -623,7 +623,7 @@
       margin: 0 auto;
     }
 
-    /* --- DYNAMIC GALLERY GRID --- */
+    /* Gallery */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -954,38 +954,42 @@
       white-space: pre-line;
     }
 
-    /* RSVP Form */
+    /* ========================================================
+       SENIOR-FRIENDLY RSVP (BOLD 2PX BORDERS, DYNAMIC +1 / +2)
+       ======================================================== */
     .form-group {
       text-align: left;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
     label {
       display: block;
-      font-size: 0.76rem;
-      letter-spacing: 0.1em;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-weight: 600;
-      color: var(--navy);
+      font-weight: 700; /* Darker, clearer for elderly relatives */
+      color: #101B2E;
       margin-bottom: 8px;
     }
 
-    input, textarea {
+    /* Bold 2px High-Contrast Inputs */
+    input, select, textarea {
       width: 100%;
-      padding: 14px 16px;
+      padding: 15px 18px;
       border-radius: 14px;
-      border: 1px solid var(--beige-border);
-      background-color: var(--white);
+      border: 2px solid #C8B8A6; /* Bold 2px border */
+      background-color: #FFFFFF;
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.95rem;
-      color: var(--navy);
+      font-size: 0.98rem;
+      color: #0F1A2C;
       outline: none;
       transition: all 0.25s ease;
+      font-weight: 400;
     }
 
-    input:focus, textarea:focus {
-      border-color: var(--pink-accent);
-      box-shadow: 0 0 0 3px rgba(221, 165, 165, 0.25);
+    input:focus, select:focus, textarea:focus {
+      border-color: #B87A7A;
+      box-shadow: 0 0 0 4px rgba(221, 165, 165, 0.35);
     }
 
     .attendance-cards {
@@ -994,10 +998,11 @@
       gap: 14px;
     }
 
+    /* Bold Attendance Cards */
     .attend-card {
-      border: 1.5px solid var(--beige-border);
+      border: 2px solid #C8B8A6; /* Bold border */
       border-radius: 16px;
-      padding: 16px 12px;
+      padding: 18px 12px;
       text-align: center;
       cursor: pointer;
       background: var(--white);
@@ -1013,22 +1018,27 @@
     }
 
     .attend-card .attend-icon {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       color: var(--pink-accent);
       margin-bottom: 2px;
     }
 
     .attend-card .attend-text {
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-size: 0.92rem;
+      font-weight: 600;
       color: var(--navy);
     }
 
     .attend-card.active {
-      background-color: var(--pink-soft);
-      border-color: var(--pink-accent);
-      box-shadow: 0 6px 18px rgba(221, 165, 165, 0.3);
+      background-color: #F7E7E7;
+      border-color: #B87A7A;
+      box-shadow: 0 6px 18px rgba(221, 165, 165, 0.4);
       transform: translateY(-2px);
+    }
+
+    /* Companion Input Boxes */
+    .companion-input-wrap {
+      margin-top: 10px;
     }
 
     .btn-submit {
@@ -1038,13 +1048,13 @@
       color: var(--white);
       border: none;
       border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.92rem;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       cursor: pointer;
       transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-      margin-top: 10px;
+      margin-top: 14px;
       box-shadow: 0 6px 18px rgba(221, 165, 165, 0.35);
       display: flex;
       align-items: center;
@@ -1104,15 +1114,15 @@
     .btn-resubmit {
       margin-top: 26px;
       background: none;
-      border: 1px solid var(--beige-border);
+      border: 2px solid #C8B8A6;
       border-radius: 50px;
-      padding: 10px 24px;
+      padding: 10px 26px;
       color: var(--navy);
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.25s ease;
     }
@@ -1201,7 +1211,7 @@
       .seal-letters { font-size: 1.2rem; }
       .palette-row { gap: 10px; }
       .swatch { width: 36px; height: 36px; }
-      .card { padding: 38px 22px; }
+      .card { padding: 38px 20px; }
       .footer-names { font-size: 1.45rem; }
     }
   </style>
@@ -1291,7 +1301,6 @@
         <span class="flourish-line"></span>
       </div>
 
-      <!-- Auto-generated from 'Story' sheet tab -->
       <div class="timeline-wrapper" id="timelineWrapper">
         <div class="timeline-item">
           <div class="timeline-year-pill">2018</div>
@@ -1327,7 +1336,6 @@
         <span class="flourish-line"></span>
       </div>
 
-      <!-- Auto-generated from 'Gallery' sheet tab -->
       <div class="gallery-grid" id="galleryGrid">
         <div class="gallery-polaroid">
           <img src="https://i.imgur.com/DeCF3mR.jpeg" alt="Engagement photo">
@@ -1511,7 +1519,7 @@
       </div>
     </section>
 
-    <!-- 6. Clean RSVP Form -->
+    <!-- 6. SENIOR-FRIENDLY RSVP FORM (BOLD 2PX BORDERS + DYNAMIC COMPANIONS) -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
       <h2>RSVP</h2>
@@ -1524,6 +1532,7 @@
       
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 26px;" id="rsvpDeadline">Kindly respond until November 30, 2026</p>
 
+      <!-- Confirmation Screen -->
       <div id="successModal" class="rsvp-fade-panel">
         <div class="heart-icon">❦</div>
         <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Thank You!</h2>
@@ -1533,12 +1542,15 @@
         </button>
       </div>
 
+      <!-- Main Form -->
       <form id="rsvpForm" class="rsvp-fade-panel">
+        <!-- 1. Full Name -->
         <div class="form-group">
-          <label>Full Name</label>
+          <label>Your Full Name</label>
           <input type="text" id="guestName" placeholder="e.g. Juan Dela Cruz" required />
         </div>
 
+        <!-- 2. Attendance Selection -->
         <div class="form-group">
           <label>Will you be attending?</label>
           <div class="attendance-cards">
@@ -1556,6 +1568,23 @@
           </div>
         </div>
 
+        <!-- 3. Total Seats (1, 2, or 3) -->
+        <div class="form-group" id="seatsGroup">
+          <label>Total Number of Seats Reserved</label>
+          <select id="seatCountSelect">
+            <option value="1">1 Seat (Just Me)</option>
+            <option value="2">2 Seats (Me + 1 Companion)</option>
+            <option value="3">3 Seats (Me + 2 Companions)</option>
+          </select>
+        </div>
+
+        <!-- 4. Dynamic Companion Name Fields -->
+        <div class="form-group" id="companionFieldsGroup" style="display: none;">
+          <label id="companionLabel">Companion's Full Name</label>
+          <div id="companionInputsContainer"></div>
+        </div>
+
+        <!-- 5. Message & Wishes -->
         <div class="form-group">
           <label>Message for the Couple / Song Request</label>
           <textarea id="message" rows="3" placeholder="Leave a wish or a song that gets you on the dance floor..."></textarea>
@@ -1597,19 +1626,17 @@
       return null;
     }
 
-    // 1. Live Fetch Sheet Data (Config, Photos, Entourage, Story & Gallery)
+    // 1. Live Fetch Sheet Data
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
           
-          // Dynamic Hero Photo
           if (cfg.Hero_Image_URL) {
             document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
           }
 
-          // Dynamic Text Settings
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
@@ -1621,7 +1648,6 @@
           if (cfg.Hero_Subtitle) document.getElementById('heroSub').innerText = cfg.Hero_Subtitle;
           if (cfg.Event_Date_Display) document.getElementById('heroDate').innerText = cfg.Event_Date_Display;
           
-          // Event details
           if (cfg.Ceremony_Time) document.getElementById('ceremonyTime').innerText = cfg.Ceremony_Time;
           if (cfg.Ceremony_Venue) document.getElementById('ceremonyVenue').innerText = cfg.Ceremony_Venue;
           if (cfg.Ceremony_Address) document.getElementById('ceremonyAddress').innerText = cfg.Ceremony_Address;
@@ -1632,7 +1658,6 @@
           if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
           if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
 
-          // Countdown
           if (cfg.Countdown_Target) {
             const parsedTarget = parseDateSafe(cfg.Countdown_Target);
             if (parsedTarget) {
@@ -1643,7 +1668,7 @@
 
           if (cfg.RSVP_Deadline) document.getElementById('rsvpDeadline').innerText = cfg.RSVP_Deadline;
 
-          // DYNAMIC STORY MILESTONES (Renders any number of rows from 'Story' tab)
+          // DYNAMIC STORY MILESTONES
           if (data.story && data.story.length > 0) {
             const timelineContainer = document.getElementById('timelineWrapper');
             timelineContainer.innerHTML = data.story.map(item => `
@@ -1655,7 +1680,7 @@
             `).join('');
           }
 
-          // DYNAMIC GALLERY LOOKBOOK (Renders any number of photos from 'Gallery' tab)
+          // DYNAMIC GALLERY LOOKBOOK
           if (data.gallery && data.gallery.length > 0) {
             const galleryContainer = document.getElementById('galleryGrid');
             galleryContainer.innerHTML = data.gallery.map(item => `
@@ -1666,7 +1691,7 @@
             `).join('');
           }
 
-          // DYNAMIC ENTOURAGE (Renders any number of groups from 'Entourage' tab)
+          // DYNAMIC ENTOURAGE
           if (data.entourage && data.entourage.length > 0) {
             const entourageContainer = document.getElementById('entourageContent');
             entourageContainer.innerHTML = data.entourage.map(item => `
@@ -1753,15 +1778,57 @@
       }
     });
 
-    // 5. Attendance Toggle
+    // 5. Attendance & Companion Toggle UX
     let selectedAttendance = 'Joyfully Accepts';
+    const seatsGroup = document.getElementById('seatsGroup');
+    const companionGroup = document.getElementById('companionFieldsGroup');
+    const companionContainer = document.getElementById('companionInputsContainer');
+    const seatSelect = document.getElementById('seatCountSelect');
+
     function setAttendance(el, val) {
       document.querySelectorAll('.attend-card').forEach(card => card.classList.remove('active'));
       el.classList.add('active');
       selectedAttendance = val;
+
+      if (val === 'Regretfully Declines') {
+        seatsGroup.style.display = 'none';
+        companionGroup.style.display = 'none';
+      } else {
+        seatsGroup.style.display = 'block';
+        updateCompanionInputs();
+      }
     }
 
-    // 6. Non-Stop Countdown Timer
+    function updateCompanionInputs() {
+      const seats = parseInt(seatSelect.value, 10);
+      companionContainer.innerHTML = '';
+
+      if (seats === 1 || selectedAttendance === 'Regretfully Declines') {
+        companionGroup.style.display = 'none';
+      } else if (seats === 2) {
+        companionGroup.style.display = 'block';
+        document.getElementById('companionLabel').innerText = "Companion's Full Name";
+        companionContainer.innerHTML = `
+          <div class="companion-input-wrap">
+            <input type="text" class="companion-name-input" placeholder="e.g. Maria Santos" required />
+          </div>
+        `;
+      } else if (seats === 3) {
+        companionGroup.style.display = 'block';
+        document.getElementById('companionLabel').innerText = "Names of 2 Companions";
+        companionContainer.innerHTML = `
+          <div class="companion-input-wrap" style="margin-bottom: 12px;">
+            <input type="text" class="companion-name-input" placeholder="1st Companion Full Name" required />
+          </div>
+          <div class="companion-input-wrap">
+            <input type="text" class="companion-name-input" placeholder="2nd Companion Full Name" required />
+          </div>
+        `;
+      }
+    }
+    seatSelect.addEventListener('change', updateCompanionInputs);
+
+    // 6. Countdown Timer
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
@@ -1769,7 +1836,7 @@
       if (!isNaN(diff) && diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const mins = Math.floor((diff % (1000 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
         const dEl = document.getElementById("days");
@@ -1819,9 +1886,19 @@
       btnSpinner.style.display = "inline-block";
       btnSubmitText.innerText = "Saving Your RSVP...";
 
+      // Collect companion names
+      const companionInputs = document.querySelectorAll('.companion-name-input');
+      const companionNamesList = [];
+      companionInputs.forEach(input => {
+        if (input.value.trim()) companionNamesList.push(input.value.trim());
+      });
+      const companionsString = companionNamesList.length > 0 ? companionNamesList.join(' • ') : 'None';
+
       const data = {
         name: document.getElementById("guestName").value,
         attendance: selectedAttendance,
+        guests: selectedAttendance === 'Joyfully Accepts' ? seatSelect.value : 0,
+        companions: selectedAttendance === 'Joyfully Accepts' ? companionsString : 'None',
         message: document.getElementById("message").value
       };
 
@@ -1861,6 +1938,8 @@
 
         document.getElementById("guestName").value = "";
         document.getElementById("message").value = "";
+        seatSelect.value = "1";
+        updateCompanionInputs();
         setAttendance(document.querySelectorAll('.attend-card')[0], 'Joyfully Accepts');
         
         btn.disabled = false;
