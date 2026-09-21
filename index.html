@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lawrence & Sharmaine | Wedding Invitation</title>
   
+  <!-- Custom "L&S" Luxury Browser Tab Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231A2B49' stroke='%23DDA5A5' stroke-width='4'/><text x='50' y='58' font-family='Georgia, serif' font-size='32' font-weight='bold' fill='%23FFFFFF' text-anchor='middle' dominant-baseline='middle'>L&amp;S</text></svg>">
+
   <!-- Google Fonts: Cormorant Garamond + Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -331,7 +334,7 @@
       font-weight: 400;
     }
 
-    /* --- Hero Section (Controlled by Google Sheet) --- */
+    /* --- Hero Section --- */
     .hero-full {
       position: relative;
       width: 100%;
@@ -341,7 +344,7 @@
       align-items: center;
       justify-content: flex-start;
       text-align: center;
-      background-image: url('https://i.imgur.com/DeCF3mR.jpeg'); /* Fallback image */
+      background-image: url('https://i.imgur.com/DeCF3mR.jpeg');
       background-size: cover;
       background-position: center 60%;
       background-repeat: no-repeat;
@@ -1120,13 +1123,57 @@
       transform: translateY(-2px);
     }
 
+    /* --- POLISHED LUXURY FOOTER --- */
     footer {
       text-align: center;
-      padding: 30px 20px 60px;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      padding: 50px 20px 80px;
       position: relative;
       z-index: 2;
+    }
+
+    .footer-monogram {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(221, 165, 165, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 14px rgba(26, 43, 73, 0.05);
+    }
+
+    .footer-monogram span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: var(--navy);
+      letter-spacing: 0.12em;
+    }
+
+    .footer-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--pink-accent);
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .footer-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      color: var(--navy);
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+
+    .footer-date {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     @media (max-width: 600px) {
@@ -1155,6 +1202,7 @@
       .palette-row { gap: 10px; }
       .swatch { width: 36px; height: 36px; }
       .card { padding: 38px 22px; }
+      .footer-names { font-size: 1.45rem; }
     }
   </style>
 </head>
@@ -1205,7 +1253,7 @@
     <source src="https://raw.githubusercontent.com/teammaqui2026-png/wedding-assets/main/You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
   </audio>
 
-  <!-- Hero Section (Has id="heroFull" so Google Sheet can swap the image) -->
+  <!-- Hero Section -->
   <header class="hero-full" id="heroFull">
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -1308,6 +1356,7 @@
         <span class="flourish-line"></span>
       </div>
       
+      <!-- Countdown Timer -->
       <div class="countdown-editorial">
         <div class="timer-unit">
           <span class="timer-num" id="days">00</span>
@@ -1330,6 +1379,7 @@
         </div>
       </div>
 
+      <!-- Add to Calendar Button -->
       <div>
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
@@ -1343,6 +1393,7 @@
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
       
+      <!-- Event Blocks with Live GPS Links -->
       <div class="event-grid">
         <div class="event-block">
           <div class="event-icon-circle">
@@ -1518,8 +1569,14 @@
       </form>
     </section>
 
+    <!-- POLISHED LUXURY FOOTER -->
     <footer>
-      Lawrence & Sharmaine • 2026
+      <div class="footer-monogram">
+        <span>L❦S</span>
+      </div>
+      <p class="footer-quote">We cannot wait to celebrate our forever with you.</p>
+      <h3 class="footer-names">Lawrence &amp; Sharmaine</h3>
+      <p class="footer-date">Saturday, December 19, 2026 • Quezon City, Philippines</p>
     </footer>
   </div>
 
