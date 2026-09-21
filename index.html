@@ -331,7 +331,7 @@
       font-weight: 400;
     }
 
-    /* --- Hero Section --- */
+    /* --- Hero Section (Controlled by Google Sheet) --- */
     .hero-full {
       position: relative;
       width: 100%;
@@ -341,7 +341,7 @@
       align-items: center;
       justify-content: flex-start;
       text-align: center;
-      background-image: url('https://i.imgur.com/DeCF3mR.jpeg');
+      background-image: url('https://i.imgur.com/DeCF3mR.jpeg'); /* Fallback image */
       background-size: cover;
       background-position: center 60%;
       background-repeat: no-repeat;
@@ -951,7 +951,7 @@
       white-space: pre-line;
     }
 
-    /* --- RSVP Form & Smooth Transitions --- */
+    /* RSVP Form */
     .form-group {
       text-align: left;
       margin-bottom: 22px;
@@ -1028,7 +1028,6 @@
       transform: translateY(-2px);
     }
 
-    /* Button with Spinner Support */
     .btn-submit {
       width: 100%;
       padding: 17px;
@@ -1062,7 +1061,6 @@
       transform: none;
     }
 
-    /* Button Spinner */
     .btn-spinner {
       display: none;
       width: 16px;
@@ -1073,7 +1071,6 @@
       animation: spin 0.8s linear infinite;
     }
 
-    /* Velvet Cross-Fade Animation */
     .rsvp-fade-panel {
       transition: opacity 0.45s ease, transform 0.45s ease;
     }
@@ -1089,7 +1086,6 @@
       transform: scale(1);
     }
 
-    /* Success Card */
     #successModal {
       display: none;
       text-align: center;
@@ -1102,7 +1098,6 @@
       margin-bottom: 12px;
     }
 
-    /* Submit Another Button */
     .btn-resubmit {
       margin-top: 26px;
       background: none;
@@ -1205,13 +1200,13 @@
     <span id="musicText">Music</span>
   </div>
 
-  <!-- Piano Audio Track -->
+  <!-- Audio -->
   <audio id="weddingAudio" loop preload="auto">
     <source src="https://raw.githubusercontent.com/teammaqui2026-png/wedding-assets/main/You're%20Still%20The%20One%20-%20Shania%20Twain%20(Piano%20Cover%20by%20Riyandi%20Kusuma).mp3" type="audio/mp3">
   </audio>
 
-  <!-- Hero Section -->
-  <header class="hero-full">
+  <!-- Hero Section (Has id="heroFull" so Google Sheet can swap the image) -->
+  <header class="hero-full" id="heroFull">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       
@@ -1313,7 +1308,6 @@
         <span class="flourish-line"></span>
       </div>
       
-      <!-- Countdown Timer -->
       <div class="countdown-editorial">
         <div class="timer-unit">
           <span class="timer-num" id="days">00</span>
@@ -1336,7 +1330,6 @@
         </div>
       </div>
 
-      <!-- Add to Calendar Concierge Button -->
       <div>
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
@@ -1350,7 +1343,6 @@
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
       
-      <!-- Event Blocks with Live GPS Links -->
       <div class="event-grid">
         <div class="event-block">
           <div class="event-icon-circle">
@@ -1469,7 +1461,7 @@
       </div>
     </section>
 
-    <!-- 6. RSVP Form with Smooth Cross-Fade & Resubmit -->
+    <!-- 6. Clean RSVP Form -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
       <h2>RSVP</h2>
@@ -1482,7 +1474,6 @@
       
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 26px;" id="rsvpDeadline">Kindly respond until November 30, 2026</p>
 
-      <!-- Success Screen with 'Submit Another' option -->
       <div id="successModal" class="rsvp-fade-panel">
         <div class="heart-icon">❦</div>
         <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Thank You!</h2>
@@ -1492,7 +1483,6 @@
         </button>
       </div>
 
-      <!-- Form Panel -->
       <form id="rsvpForm" class="rsvp-fade-panel">
         <div class="form-group">
           <label>Full Name</label>
@@ -1539,13 +1529,24 @@
 
     let weddingDate = new Date("December 19, 2026 14:00:00").getTime();
 
-    // 1. Live Fetch Sheet Data (Config & Entourage) on page load
+    // 1. Live Fetch Sheet Data (Config, Photos & Entourage) on page load
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL)
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
           
+          // DYNAMIC HERO PHOTO FROM GOOGLE SHEET:
+          if (cfg.Hero_Image_URL) {
+            document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
+          }
+
+          // DYNAMIC LOOKBOOK PHOTOS FROM GOOGLE SHEET:
+          if (cfg.Gallery_Photo_1) document.getElementById('galleryPhoto1').src = cfg.Gallery_Photo_1;
+          if (cfg.Gallery_Photo_2) document.getElementById('galleryPhoto2').src = cfg.Gallery_Photo_2;
+          if (cfg.Gallery_Photo_3) document.getElementById('galleryPhoto3').src = cfg.Gallery_Photo_3;
+
+          // Names
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
@@ -1557,7 +1558,7 @@
           if (cfg.Hero_Subtitle) document.getElementById('heroSub').innerText = cfg.Hero_Subtitle;
           if (cfg.Event_Date_Display) document.getElementById('heroDate').innerText = cfg.Event_Date_Display;
           
-          // Update Milestones
+          // Story Milestones
           if (cfg.Story_1_Year) document.getElementById('story1Year').innerText = cfg.Story_1_Year;
           if (cfg.Story_1_Title) document.getElementById('story1Title').innerText = cfg.Story_1_Title;
           if (cfg.Story_1_Text) document.getElementById('story1Text').innerText = cfg.Story_1_Text;
@@ -1574,7 +1575,7 @@
           if (cfg.Story_4_Title) document.getElementById('story4Title').innerText = cfg.Story_4_Title;
           if (cfg.Story_4_Text) document.getElementById('story4Text').innerText = cfg.Story_4_Text;
 
-          // Update Event details
+          // Event details
           if (cfg.Ceremony_Time) document.getElementById('ceremonyTime').innerText = cfg.Ceremony_Time;
           if (cfg.Ceremony_Venue) document.getElementById('ceremonyVenue').innerText = cfg.Ceremony_Venue;
           if (cfg.Ceremony_Address) document.getElementById('ceremonyAddress').innerText = cfg.Ceremony_Address;
@@ -1585,7 +1586,7 @@
           if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
           if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
 
-          // Update Countdown Target
+          // Countdown Target
           if (cfg.Countdown_Target) {
             weddingDate = new Date(cfg.Countdown_Target.replace(' ', 'T')).getTime();
             updateCountdown();
@@ -1593,7 +1594,7 @@
 
           if (cfg.RSVP_Deadline) document.getElementById('rsvpDeadline').innerText = cfg.RSVP_Deadline;
 
-          // Render Live Entourage rows from Google Sheet
+          // Live Entourage from 'Entourage' sheet tab
           if (data.entourage && data.entourage.length > 0) {
             const container = document.getElementById('entourageContent');
             container.innerHTML = data.entourage.map(item => `
@@ -1604,7 +1605,7 @@
             `).join('');
           }
         })
-        .catch(err => console.log("Using instant local cache:", err));
+        .catch(err => console.log("Using local cache:", err));
     }
     syncSheetData();
 
@@ -1729,11 +1730,9 @@
     const btnSpinner = document.getElementById("btnSpinner");
     const btnSubmitText = document.getElementById("btnSubmitText");
 
-    // Form Submit
     form.addEventListener("submit", function(e) {
       e.preventDefault();
       
-      // Start responsive button loading state
       btn.disabled = true;
       btnSpinner.style.display = "inline-block";
       btnSubmitText.innerText = "Saving Your RSVP...";
@@ -1750,7 +1749,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       }).then(() => {
-        // Smooth cross-fade transition to Thank You
         form.classList.add("fade-out");
         
         setTimeout(() => {
@@ -1771,9 +1769,7 @@
       });
     });
 
-    // Submit Another RSVP Handler
     document.getElementById("btnResubmit").addEventListener("click", function() {
-      // Smooth fade out of success modal
       successModal.classList.remove("fade-in");
       successModal.classList.add("fade-out");
 
@@ -1781,7 +1777,6 @@
         successModal.style.display = "none";
         successModal.classList.remove("fade-out");
 
-        // Reset form inputs & button
         document.getElementById("guestName").value = "";
         document.getElementById("message").value = "";
         setAttendance(document.querySelectorAll('.attend-card')[0], 'Joyfully Accepts');
@@ -1790,7 +1785,6 @@
         btnSpinner.style.display = "none";
         btnSubmitText.innerText = "Send My RSVP";
 
-        // Smooth fade in of form
         form.style.display = "block";
         form.classList.add("fade-in");
         setTimeout(() => form.classList.remove("fade-in"), 400);
