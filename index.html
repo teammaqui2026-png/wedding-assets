@@ -1586,9 +1586,9 @@
 
     let weddingDate = new Date("December 19, 2026 14:00:00").getTime();
 
-    // 1. Live Fetch Sheet Data (Config, Photos & Entourage) on page load
+    // 1. Live Fetch Sheet Data (Config, Photos & Entourage) with Cache-Buster
     function syncSheetData() {
-      fetch(GOOGLE_SCRIPT_API_URL)
+      fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
@@ -1598,7 +1598,7 @@
             document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
           }
 
-          // DYNAMIC LOOKBOOK PHOTOS FROM GOOGLE SHEET:
+          // DYNAMIC LOOKBOOK PHOTOS:
           if (cfg.Gallery_Photo_1) document.getElementById('galleryPhoto1').src = cfg.Gallery_Photo_1;
           if (cfg.Gallery_Photo_2) document.getElementById('galleryPhoto2').src = cfg.Gallery_Photo_2;
           if (cfg.Gallery_Photo_3) document.getElementById('galleryPhoto3').src = cfg.Gallery_Photo_3;
