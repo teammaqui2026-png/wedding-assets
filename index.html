@@ -2082,50 +2082,53 @@
       }, 350);
     });
 
-    // --- GALLERY LIGHTBOX HANDLER ---
+    // --- SAFE GALLERY LIGHTBOX HANDLER ---
     const lightbox = document.getElementById('galleryLightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxClose = document.getElementById('lightboxClose');
+    const galleryGrid = document.getElementById('galleryGrid');
 
-    // Event delegation: works for static photos AND dynamic Google Sheet photos
-    document.getElementById('galleryGrid').addEventListener('click', function(e) {
-      const polaroid = e.target.closest('.gallery-polaroid');
-      if (!polaroid) return;
+    if (galleryGrid && lightbox && lightboxImg) {
+      galleryGrid.addEventListener('click', function(e) {
+        const polaroid = e.target.closest('.gallery-polaroid');
+        if (!polaroid) return;
 
-      const img = polaroid.querySelector('img');
-      const caption = polaroid.querySelector('.polaroid-caption');
+        const img = polaroid.querySelector('img');
+        const caption = polaroid.querySelector('.polaroid-caption');
 
-      if (img) {
-        lightboxImg.src = img.src;
-        lightboxCaption.innerText = caption ? caption.innerText : '';
-        lightbox.classList.add('is-active');
+        if (img) {
+          lightboxImg.src = img.src;
+          if (lightboxCaption) {
+            lightboxCaption.innerText = caption ? caption.innerText : '';
+          }
+          lightbox.classList.add('is-active');
+        }
+      });
+
+      function closeLightbox() {
+        lightbox.classList.remove('is-active');
+        setTimeout(() => {
+          lightboxImg.src = '';
+        }, 250);
       }
-    });
 
-    function closeLightbox() {
-      lightbox.classList.remove('is-active');
-      setTimeout(() => {
-        lightboxImg.src = '';
-      }, 250);
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('is-active')) {
+          closeLightbox();
+        }
+      });
     }
-
-    // Close on button click
-    lightboxClose.addEventListener('click', closeLightbox);
-
-    // Close when tapping outside the photo
-    lightbox.addEventListener('click', function(e) {
-      if (e.target === lightbox) {
-        closeLightbox();
-      }
-    });
-
-    // Close on ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && lightbox.classList.contains('is-active')) {
-        closeLightbox();
-      }
-    });
   </script>
 
   <!-- Gallery Lightbox Modal -->
