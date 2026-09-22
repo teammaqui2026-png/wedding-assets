@@ -44,78 +44,61 @@
       overflow-x: hidden;
     }
 
-    /* --- Luxury Envelope Opening Screen --- */
+    /* --- Envelope Opening Screen --- */
     .envelope-screen {
       position: fixed;
       inset: 0;
       z-index: 10000;
-      background: radial-gradient(circle at 50% 48%, #1f3354 0%, #101b2d 55%, #070c14 100%);
+      background: radial-gradient(circle at 50% 45%, #182844 0%, #0a101b 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      perspective: 1400px;
+      perspective: 1200px;
       transition: opacity 0.85s ease 2s, visibility 0.85s ease 2s, transform 0.85s ease 2s;
     }
 
     .envelope-screen.opened {
       opacity: 0;
       visibility: hidden;
-      transform: scale(1.06);
+      transform: scale(1.08);
       pointer-events: none;
-    }
-
-    /* Ambient Warmth Behind Envelope */
-    .envelope-screen::before {
-      content: '';
-      position: absolute;
-      width: 520px;
-      height: 420px;
-      background: radial-gradient(ellipse at center, rgba(221, 165, 165, 0.18) 0%, rgba(26, 43, 73, 0.05) 55%, transparent 75%);
-      pointer-events: none;
-      filter: blur(25px);
     }
 
     .envelope-stage {
       position: relative;
-      width: 360px;
-      height: 240px;
+      width: 310px;
+      height: 210px;
+      margin-top: 80px;
       cursor: pointer;
       user-select: none;
-      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.65)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
-      transition: transform 0.3s ease;
     }
 
-    .envelope-stage:hover {
-      transform: translateY(-4px) scale(1.015);
-    }
-
-    /* Envelope Shell */
     .env-back {
       position: absolute;
       inset: 0;
-      background: linear-gradient(145deg, #131f32 0%, #0c1421 100%);
-      border-radius: 12px;
-      border: 1px solid rgba(221, 165, 165, 0.3);
+      background: #111a2a;
+      border-radius: 14px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(221, 165, 165, 0.25);
       z-index: 1;
     }
 
-    /* Inside Card preview */
     .env-card {
       position: absolute;
-      top: 14px;
-      left: 16px;
-      right: 16px;
-      height: 190px;
-      background: linear-gradient(180deg, #FFFDF9 0%, #F5EFEB 100%);
-      border-radius: 8px;
-      padding: 24px 18px;
+      top: 18px;
+      left: 14px;
+      right: 14px;
+      height: 155px;
+      background: #FCFAF6;
+      border-radius: 10px;
+      padding: 24px 16px;
       text-align: center;
       z-index: 2;
       border: 1px solid #E8DFD1;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-      transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, box-shadow 0.95s ease 0.5s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, box-shadow 0.9s ease 0.5s;
       transform: translateY(0);
       overflow: hidden;
       display: flex;
@@ -128,26 +111,27 @@
       content: '';
       position: absolute;
       inset: 6px;
-      border: 1px solid rgba(221, 165, 165, 0.5);
+      border: 1px solid rgba(221, 165, 165, 0.45);
       border-radius: 6px;
       pointer-events: none;
     }
 
     .card-eyebrow {
-      font-size: 0.65rem;
-      letter-spacing: 0.28em;
+      font-size: 0.68rem;
+      letter-spacing: 0.26em;
       text-transform: uppercase;
-      color: #938271;
-      margin-bottom: 6px;
+      color: #8C8074;
+      margin-bottom: 8px;
       font-weight: 600;
     }
 
     .card-names {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
+      font-size: 2.15rem;
       line-height: 1.15;
       color: var(--navy);
       font-weight: 500;
+      letter-spacing: 0.02em;
     }
 
     .card-names .amp {
@@ -158,194 +142,198 @@
       font-size: 1.9rem;
     }
 
-    /* Envelope Pocket & Realistic Gradient Folds */
     .env-pocket-solid {
       position: absolute;
       inset: 0;
       z-index: 3;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       pointer-events: none;
     }
 
-    /* Left Fold */
     .env-fold-left {
       position: absolute;
-      inset: 0;
-      clip-path: polygon(0 0, 180px 120px, 0 100%);
-      background: linear-gradient(135deg, #1a2a44 0%, #111b2c 100%);
-      filter: drop-shadow(2px 0 4px rgba(0,0,0,0.25));
+      top: 0; left: 0; bottom: 0;
+      width: 0; height: 0;
+      border-top: 105px solid transparent;
+      border-bottom: 105px solid transparent;
+      border-left: 155px solid #16243a;
     }
 
-    /* Right Fold */
     .env-fold-right {
       position: absolute;
-      inset: 0;
-      clip-path: polygon(100% 0, 180px 120px, 100% 100%);
-      background: linear-gradient(-135deg, #1b2d49 0%, #0f1827 100%);
-      filter: drop-shadow(-2px 0 4px rgba(0,0,0,0.25));
+      top: 0; right: 0; bottom: 0;
+      width: 0; height: 0;
+      border-top: 105px solid transparent;
+      border-bottom: 105px solid transparent;
+      border-right: 155px solid #142135;
     }
 
-    /* Bottom Fold */
     .env-fold-bottom {
       position: absolute;
-      inset: 0;
-      clip-path: polygon(0 100%, 180px 110px, 100% 100%);
-      background: linear-gradient(0deg, #1f3252 0%, #16243b 100%);
-      box-shadow: inset 0 1px 0 rgba(221, 165, 165, 0.2);
-      filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.3));
+      bottom: 0; left: 0; right: 0;
+      width: 0; height: 0;
+      border-left: 155px solid transparent;
+      border-right: 155px solid transparent;
+      border-bottom: 115px solid #1a2a44;
+      filter: drop-shadow(0 -3px 6px rgba(0,0,0,0.15));
     }
 
-    /* Top Flap */
     .env-flap-top {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 155px;
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      background: linear-gradient(180deg, #24395c 0%, #1a2942 100%);
+      width: 0; height: 0;
+      border-left: 155px solid transparent;
+      border-right: 155px solid transparent;
+      border-top: 120px solid #203454;
       transform-origin: top center;
-      transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 5;
-      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
     }
 
-    /* Delicate gold/rose foil lining edge on flap tip */
-    .env-flap-top::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      clip-path: polygon(0 0, 100% 0, 50% 100%, 50% calc(100% - 2px), 98% 2px, 2% 2px);
-      background: linear-gradient(90deg, transparent, #DDA5A5 50%, transparent);
-      opacity: 0.7;
-    }
-
-    /* 3D Realistic Rose-Gold Wax Seal */
     .env-center-seal {
       position: absolute;
-      top: 110px;
+      top: 86px;
       left: 50%;
       transform: translateX(-50%);
-      width: 66px;
-      height: 66px;
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #EBB6B6 0%, #C87D7D 55%, #8B4343 100%);
+      background: linear-gradient(135deg, #E5A3A3 0%, #C47E7E 50%, #9E5B5B 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 
-        0 10px 24px rgba(0, 0, 0, 0.65),
-        0 2px 6px rgba(0,0,0,0.4),
-        inset 0 3px 4px rgba(255, 255, 255, 0.6),
-        inset 0 -3px 6px rgba(70, 20, 20, 0.6);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.4);
       z-index: 6;
       cursor: pointer;
-      transition: all 0.35s ease;
-      animation: sealPulse 2.8s infinite ease-in-out;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: sealGlow 3s infinite ease-in-out;
     }
 
-    /* Melted organic wax rim */
     .env-center-seal::before {
       content: '';
       position: absolute;
-      inset: -4px;
-      border-radius: 48% 52% 51% 49% / 53% 47% 53% 47%;
-      background: radial-gradient(circle, #C87D7D 40%, rgba(139, 67, 67, 0.4) 100%);
-      z-index: -1;
-      filter: blur(1px);
-    }
-
-    /* Inner stamped seal deboss circle */
-    .env-center-seal::after {
-      content: '';
-      position: absolute;
-      inset: 6px;
+      inset: 5px;
+      border: 1px dashed rgba(255, 255, 255, 0.45);
       border-radius: 50%;
-      border: 1.5px dashed rgba(255, 230, 230, 0.55);
-      box-shadow: inset 0 2px 3px rgba(0,0,0,0.35);
     }
 
     .env-seal-text {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      color: #FFF2F2;
-      text-shadow: 0 1px 1px rgba(70, 20, 20, 0.9), 0 -1px 1px rgba(255, 255, 255, 0.4);
-      z-index: 1;
+      font-size: 1.3rem;
+      color: #FFFFFF;
+      font-weight: 500;
+      letter-spacing: 0.12em;
     }
 
-    @keyframes sealPulse {
-      0%, 100% { transform: translateX(-50%) scale(1); filter: brightness(1); }
-      50% { transform: translateX(-50%) scale(1.04); filter: brightness(1.12); }
+    .env-hint-text {
+      color: #A59B8E;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .envelope-stage:hover .env-center-seal {
-      transform: translateX(-50%) scale(1.08);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.7), inset 0 3px 5px rgba(255, 255, 255, 0.7);
-    }
-
-    /* Open State */
     .envelope-stage.is-opened .env-flap-top {
       transform: rotateX(180deg);
       z-index: 1;
-      filter: drop-shadow(0 -4px 10px rgba(0,0,0,0.3));
     }
 
     .envelope-stage.is-opened .env-center-seal {
       opacity: 0;
-      transform: translateX(-50%) scale(0.4);
+      transform: translateX(-50%) scale(0.5);
       pointer-events: none;
     }
 
     .envelope-stage.is-opened .env-card {
-      transform: translateY(-135px);
-      box-shadow: 0 25px 55px rgba(0, 0, 0, 0.6);
+      transform: translateY(-115px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
     }
 
-    /* Recipient Tag / Hint Styling */
-    .env-guest-tag {
-      margin-top: 32px;
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1.25rem;
-      color: #E8DFD1;
-      letter-spacing: 0.04em;
-      text-align: center;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    }
-
-    .env-hint-pill {
-      display: inline-flex;
+    /* --- Music Player Pill (Fixed Top-Right) --- */
+    .music-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      z-index: 999;
+      background: rgba(15, 26, 44, 0.50);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      padding: 6px 14px 6px 8px;
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 14px;
-      padding: 6px 18px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(221, 165, 165, 0.35);
-      border-radius: 50px;
-      color: #C8B8A6;
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-weight: 500;
-      backdrop-filter: blur(8px);
       transition: all 0.3s ease;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     }
 
-    .env-hint-pill span.hand-icon {
-      font-size: 0.95rem;
+    .music-disc {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--pink-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .music-disc svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--white);
+      display: block;
+    }
+
+    .music-disc.playing {
+      animation: spin 3.5s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .ambient-glow-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: #F7F4EE;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(221, 165, 165, 0.28) 0%, transparent 48%),
+        radial-gradient(circle at 88% 38%, rgba(232, 223, 209, 0.85) 0%, transparent 45%),
+        radial-gradient(circle at 18% 72%, rgba(244, 218, 218, 0.38) 0%, transparent 52%),
+        radial-gradient(circle at 82% 88%, rgba(221, 165, 165, 0.24) 0%, transparent 46%);
+    }
+
+    h1, h2, h3, .serif-font {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+
+    .section-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
       color: var(--pink-accent);
-    }
-
-    @media (max-width: 600px) {
-      .envelope-stage { width: 310px; height: 215px; }
-      .env-card { height: 165px; }
-      .card-names { font-size: 1.85rem; }
-      .card-names .amp { font-size: 1.6rem; }
-      .env-flap-top { height: 135px; }
-      .env-center-seal { top: 96px; width: 58px; height: 58px; }
-      .env-seal-text { font-size: 1.15rem; }
-      .envelope-stage.is-opened .env-card { transform: translateY(-110px); }
+      font-size: 1.5rem;
+      line-height: 1.2;
+      margin-bottom: 2px;
+      display: block;
+      font-weight: 400;
     }
 
     /* --- Hero Section --- */
@@ -1223,118 +1211,17 @@
       .card { padding: 38px 20px; }
       .footer-names { font-size: 1.45rem; }
     }
-
-    /* --- Mobile & UX Polish Styles --- */
-    
-    /* Calendar Button Group */
-    .calendar-btn-group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .calendar-btn-group .btn-calendar {
-      margin-bottom: 0;
-      cursor: pointer;
-    }
-
-    /* Lightbox Modal */
-    .gallery-polaroid {
-      cursor: pointer;
-    }
-
-    .lightbox-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 10001;
-      background: rgba(10, 16, 27, 0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.35s ease, visibility 0.35s ease;
-      user-select: none;
-    }
-
-    .lightbox-modal.is-active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .lightbox-img-wrap {
-      max-width: 90vw;
-      max-height: 75vh;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(221, 165, 165, 0.3);
-      transform: scale(0.92);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .lightbox-modal.is-active .lightbox-img-wrap {
-      transform: scale(1);
-    }
-
-    .lightbox-img-wrap img {
-      width: 100%;
-      height: 100%;
-      max-height: 75vh;
-      object-fit: contain;
-      display: block;
-    }
-
-    .lightbox-caption {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      color: #F4DADA;
-      font-size: 1.25rem;
-      margin-top: 16px;
-      letter-spacing: 0.05em;
-      text-align: center;
-    }
-
-    .lightbox-close-btn {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(221, 165, 165, 0.4);
-      color: #FFFFFF;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .lightbox-close-btn:hover {
-      background: var(--pink-accent);
-      transform: scale(1.08);
-    }
   </style>
 </head>
 <body>
 
   <!-- Fullscreen Opening Envelope -->
   <div class="envelope-screen" id="envelopeScreen">
-    
     <div class="envelope-stage" id="envelopeStage" title="Tap Wax Seal to Open">
       <div class="env-back"></div>
 
       <div class="env-card" id="envCard">
-        <p class="card-eyebrow">Wedding Invitation</p>
+        <p class="card-eyebrow">You Are Invited to the Wedding of</p>
         <h1 class="card-names" id="envNames">
           Lawrence <span class="amp">&</span> Sharmaine
         </h1>
@@ -1353,18 +1240,14 @@
       </div>
     </div>
 
-    <!-- Personalized Recipient Line -->
-    <p class="env-guest-tag" id="envelopeGuestLabel">Cordially Invited</p>
-
-    <!-- Refined Interaction Pill -->
-    <div class="env-hint-pill">
-      <span class="hand-icon">✨</span> Tap wax seal to unseal invitation
-    </div>
+    <p class="env-hint-text">
+      <span>✉</span> Tap wax seal to open invitation
+    </p>
   </div>
 
   <div class="ambient-glow-backdrop"></div>
 
-  <!-- Music Toggle -->
+  <!-- Music Toggle (Fixed Top-Right) -->
   <div class="music-toggle" id="musicToggle">
     <div class="music-disc" id="musicDisc">
       <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
@@ -1404,7 +1287,7 @@
   <!-- Content Container -->
   <div class="container" id="story">
     
-    <!-- 1. DYNAMIC OUR STORY TIMELINE -->
+    <!-- 1. OUR STORY TIMELINE -->
     <section class="card reveal-card">
       <span class="section-eyebrow">How It All Began</span>
       <h2>Our Story</h2>
@@ -1439,7 +1322,7 @@
       </div>
     </section>
 
-    <!-- 2. DYNAMIC MINI ENGAGEMENT PHOTO LOOKBOOK -->
+    <!-- 2. MINI ENGAGEMENT PHOTO LOOKBOOK -->
     <section class="card reveal-card">
       <span class="section-eyebrow">Captured Moments</span>
       <h2>Our Journey</h2>
@@ -1500,20 +1383,15 @@
         </div>
       </div>
 
-      <!-- WITH THIS: -->
-      <div class="calendar-btn-group">
+      <div>
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
           target="_blank" 
           rel="noopener noreferrer" 
           class="btn-calendar"
         >
-          <span>📅 Google Calendar</span>
+          <span>📅 Add to Google Calendar</span>
         </a>
-
-        <button type="button" class="btn-calendar" id="btnAppleCal">
-          <span>🍏 Apple / Outlook (.ics)</span>
-        </button>
       </div>
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
@@ -1709,7 +1587,7 @@
       </form>
     </section>
 
-    <!-- POLISHED LUXURY FOOTER -->
+    <!-- FOOTER -->
     <footer>
       <div class="footer-monogram">
         <span>L❦S</span>
@@ -1721,7 +1599,7 @@
   </div>
 
   <script>
-    // --- DYNAMIC "L+S" CANVAS FAVICON INJECTOR (Instant Browser Tab Logo) ---
+    // --- DYNAMIC "L+S" CANVAS FAVICON INJECTOR ---
     function setCustomFavicon() {
       try {
         const canvas = document.createElement('canvas');
@@ -1729,25 +1607,21 @@
         canvas.height = 64;
         const ctx = canvas.getContext('2d');
         
-        // Midnight Navy Circle
         ctx.beginPath();
         ctx.arc(32, 32, 29, 0, 2 * Math.PI);
         ctx.fillStyle = '#1A2B49';
         ctx.fill();
         
-        // Rose-Gold Border Ring
         ctx.lineWidth = 3.5;
         ctx.strokeStyle = '#DDA5A5';
         ctx.stroke();
 
-        // White "L+S" Text
         ctx.fillStyle = '#FFFFFF';
         ctx.font = 'bold 22px Georgia, serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('L+S', 32, 33.5);
 
-        // Apply as Favicon
         let link = document.querySelector("link[rel*='icon']");
         if (!link) {
           link = document.createElement('link');
@@ -1980,8 +1854,7 @@
     }
     seatSelect.addEventListener('change', updateCompanionInputs);
 
-    // --- AUTO-POPULATE GUEST NAME & SEATS FROM URL ---
-    // Example: https://yourweddinglink.com/?guest=Tito+Boy&seats=2
+    // Auto-populate guest name and seats from URL (e.g. ?guest=John+Doe&seats=2)
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const guest = params.get('guest');
@@ -1990,10 +1863,6 @@
       if (guest) {
         const nameInput = document.getElementById('guestName');
         if (nameInput) nameInput.value = guest;
-
-        // Shows "Cordially Invited: Tito Boy" directly under the envelope!
-        const guestLabel = document.getElementById('envelopeGuestLabel');
-        if (guestLabel) guestLabel.innerText = "Exclusively Invited: " + guest;
       }
       if (seats && ['1', '2', '3'].includes(seats)) {
         seatSelect.value = seats;
@@ -2005,27 +1874,22 @@
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
-    
-      const dEl = document.getElementById("days");
-      const hEl = document.getElementById("hours");
-      const mEl = document.getElementById("mins");
-      const sEl = document.getElementById("secs");
-    
+
       if (!isNaN(diff) && diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
-    
+
+        const dEl = document.getElementById("days");
+        const hEl = document.getElementById("hours");
+        const mEl = document.getElementById("mins");
+        const sEl = document.getElementById("secs");
+
         if (dEl) dEl.innerText = String(days).padStart(2, '0');
         if (hEl) hEl.innerText = String(hours).padStart(2, '0');
         if (mEl) mEl.innerText = String(mins).padStart(2, '0');
         if (sEl) sEl.innerText = String(secs).padStart(2, '0');
-      } else {
-        if (dEl) dEl.innerText = "00";
-        if (hEl) hEl.innerText = "00";
-        if (mEl) mEl.innerText = "00";
-        if (sEl) sEl.innerText = "00";
       }
     }
     setInterval(updateCountdown, 1000);
@@ -2050,7 +1914,7 @@
       }
     }
 
-    // 8. Smooth RSVP Submit & Resubmit Flow
+    // 8. RSVP Submit & Resubmit Flow
     const form = document.getElementById("rsvpForm");
     const successModal = document.getElementById("successModal");
     const btn = document.getElementById("submitBtn");
@@ -2128,109 +1992,6 @@
         setTimeout(() => form.classList.remove("fade-in"), 400);
       }, 350);
     });
-
-    // ==========================================
-    // 1. APPLE / OUTLOOK (.ICS) CALENDAR GENERATOR
-    // ==========================================
-    document.getElementById('btnAppleCal').addEventListener('click', function() {
-      const icsContent = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//Lawrence & Sharmaine//Wedding Invitation//EN",
-        "CALSCALE:GREGORIAN",
-        "METHOD:PUBLISH",
-        "BEGIN:VEVENT",
-        "SUMMARY:Wedding of Lawrence & Sharmaine",
-        "UID:" + new Date().getTime() + "@teammaqui2026",
-        "DTSTART:20261219T060000Z", // 2:00 PM Manila is 06:00 UTC
-        "DTEND:20261219T140000Z",   // 10:00 PM Manila is 14:00 UTC
-        "LOCATION:The Fairview Park United Methodist Church, Fairview Park, Quezon City",
-        "DESCRIPTION:Holy Matrimony of Lawrence & Sharmaine.\\nCeremony: Fairview Park United Methodist Church (2:00 PM)\\nReception: Blue Gardens Wedding & Events Venue (4:00 PM)",
-        "STATUS:CONFIRMED",
-        "END:VEVENT",
-        "END:VCALENDAR"
-      ].join("\r\n");
-
-      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', 'Lawrence-and-Sharmaine-Wedding.ics');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-
-    // ==========================================
-    // 2. INTERACTIVE PHOTO GALLERY LIGHTBOX
-    // ==========================================
-    const lightbox = document.getElementById('galleryLightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxCaption = document.getElementById('lightboxCaption');
-    const lightboxClose = document.getElementById('lightboxClose');
-
-    // Event delegation: works for initial images AND dynamic Google Sheet images
-    document.getElementById('galleryGrid').addEventListener('click', function(e) {
-      const polaroid = e.target.closest('.gallery-polaroid');
-      if (!polaroid) return;
-
-      const img = polaroid.querySelector('img');
-      const caption = polaroid.querySelector('.polaroid-caption');
-
-      if (img) {
-        lightboxImg.src = img.src;
-        lightboxCaption.innerText = caption ? caption.innerText : '';
-        lightbox.classList.add('is-active');
-      }
-    });
-
-    function closeLightbox() {
-      lightbox.classList.remove('is-active');
-      setTimeout(() => { lightboxImg.src = ""; }, 300);
-    }
-
-    lightboxClose.addEventListener('click', closeLightbox);
-
-    // Close when tapping outside the image
-    lightbox.addEventListener('click', function(e) {
-      if (e.target === lightbox || e.target.classList.contains('lightbox-img-wrap')) {
-        closeLightbox();
-      }
-    });
-
-    // Close on ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && lightbox.classList.contains('is-active')) {
-        closeLightbox();
-      }
-    });
-
-    // ==========================================
-    // 3. SMART AUDIO VISIBILITY (TAB SWITCHING)
-    // ==========================================
-    // Automatically pauses when guest switches to Messenger/browser tabs, resumes on return
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        if (isPlaying) {
-          audio.pause();
-          disc.classList.remove('playing');
-        }
-      } else {
-        if (isPlaying) {
-          audio.play().then(() => {
-            disc.classList.add('playing');
-          }).catch(err => console.log("Audio resume prevented:", err));
-        }
-      }
-    });
   </script>
-
-  <!-- Lightbox Modal Container -->
-  <div class="lightbox-modal" id="galleryLightbox">
-    <button type="button" class="lightbox-close-btn" id="lightboxClose" aria-label="Close photo">&times;</button>
-    <div class="lightbox-img-wrap">
-      <img id="lightboxImg" src="" alt="Enlarged photo">
-    </div>
-    <div class="lightbox-caption" id="lightboxCaption"></div>
-  </div>
 </body>
 </html>
