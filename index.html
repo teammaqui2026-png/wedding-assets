@@ -1223,6 +1223,106 @@
       .card { padding: 38px 20px; }
       .footer-names { font-size: 1.45rem; }
     }
+
+    /* --- Mobile & UX Polish Styles --- */
+    
+    /* Calendar Button Group */
+    .calendar-btn-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .calendar-btn-group .btn-calendar {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+
+    /* Lightbox Modal */
+    .gallery-polaroid {
+      cursor: pointer;
+    }
+
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10001;
+      background: rgba(10, 16, 27, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      user-select: none;
+    }
+
+    .lightbox-modal.is-active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 75vh;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(221, 165, 165, 0.3);
+      transform: scale(0.92);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lightbox-modal.is-active .lightbox-img-wrap {
+      transform: scale(1);
+    }
+
+    .lightbox-img-wrap img {
+      width: 100%;
+      height: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lightbox-caption {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: #F4DADA;
+      font-size: 1.25rem;
+      margin-top: 16px;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+
+    .lightbox-close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(221, 165, 165, 0.4);
+      color: #FFFFFF;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .lightbox-close-btn:hover {
+      background: var(--pink-accent);
+      transform: scale(1.08);
+    }
   </style>
 </head>
 <body>
@@ -1400,15 +1500,20 @@
         </div>
       </div>
 
-      <div>
+      <!-- WITH THIS: -->
+      <div class="calendar-btn-group">
         <a 
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+of+Lawrence+%26+Sharmaine&dates=20261219T060000Z/20261219T140000Z&details=Celebrating+the+holy+matrimony+of+Lawrence+and+Sharmaine!+Ceremony+at+Fairview+Park+United+Methodist+Church+at+2:00+PM,+followed+by+reception+at+Blue+Gardens+Wedding+and+Events+Venue.&location=The+Fairview+Park+United+Methodist+Church,+Quezon+City" 
           target="_blank" 
           rel="noopener noreferrer" 
           class="btn-calendar"
         >
-          <span>📅 Add to Google Calendar</span>
+          <span>📅 Google Calendar</span>
         </a>
+
+        <button type="button" class="btn-calendar" id="btnAppleCal">
+          <span>🍏 Apple / Outlook (.ics)</span>
+        </button>
       </div>
 
       <p style="color: var(--text-muted); font-size: 0.95rem;">We can't wait to share this unforgettable day with you.</p>
@@ -2023,6 +2128,109 @@
         setTimeout(() => form.classList.remove("fade-in"), 400);
       }, 350);
     });
+
+    // ==========================================
+    // 1. APPLE / OUTLOOK (.ICS) CALENDAR GENERATOR
+    // ==========================================
+    document.getElementById('btnAppleCal').addEventListener('click', function() {
+      const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Lawrence & Sharmaine//Wedding Invitation//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        "SUMMARY:Wedding of Lawrence & Sharmaine",
+        "UID:" + new Date().getTime() + "@teammaqui2026",
+        "DTSTART:20261219T060000Z", // 2:00 PM Manila is 06:00 UTC
+        "DTEND:20261219T140000Z",   // 10:00 PM Manila is 14:00 UTC
+        "LOCATION:The Fairview Park United Methodist Church, Fairview Park, Quezon City",
+        "DESCRIPTION:Holy Matrimony of Lawrence & Sharmaine.\\nCeremony: Fairview Park United Methodist Church (2:00 PM)\\nReception: Blue Gardens Wedding & Events Venue (4:00 PM)",
+        "STATUS:CONFIRMED",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'Lawrence-and-Sharmaine-Wedding.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // ==========================================
+    // 2. INTERACTIVE PHOTO GALLERY LIGHTBOX
+    // ==========================================
+    const lightbox = document.getElementById('galleryLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    // Event delegation: works for initial images AND dynamic Google Sheet images
+    document.getElementById('galleryGrid').addEventListener('click', function(e) {
+      const polaroid = e.target.closest('.gallery-polaroid');
+      if (!polaroid) return;
+
+      const img = polaroid.querySelector('img');
+      const caption = polaroid.querySelector('.polaroid-caption');
+
+      if (img) {
+        lightboxImg.src = img.src;
+        lightboxCaption.innerText = caption ? caption.innerText : '';
+        lightbox.classList.add('is-active');
+      }
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-active');
+      setTimeout(() => { lightboxImg.src = ""; }, 300);
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    // Close when tapping outside the image
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-img-wrap')) {
+        closeLightbox();
+      }
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('is-active')) {
+        closeLightbox();
+      }
+    });
+
+    // ==========================================
+    // 3. SMART AUDIO VISIBILITY (TAB SWITCHING)
+    // ==========================================
+    // Automatically pauses when guest switches to Messenger/browser tabs, resumes on return
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        if (isPlaying) {
+          audio.pause();
+          disc.classList.remove('playing');
+        }
+      } else {
+        if (isPlaying) {
+          audio.play().then(() => {
+            disc.classList.add('playing');
+          }).catch(err => console.log("Audio resume prevented:", err));
+        }
+      }
+    });
   </script>
+
+  <!-- Lightbox Modal Container -->
+  <div class="lightbox-modal" id="galleryLightbox">
+    <button type="button" class="lightbox-close-btn" id="lightboxClose" aria-label="Close photo">&times;</button>
+    <div class="lightbox-img-wrap">
+      <img id="lightboxImg" src="" alt="Enlarged photo">
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
 </body>
 </html>
