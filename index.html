@@ -1856,26 +1856,48 @@
     }
     seatSelect.addEventListener('change', updateCompanionInputs);
 
+    // --- AUTO-POPULATE GUEST NAME & SEATS FROM URL ---
+    // Example: https://yourweddinglink.com/?guest=Tito+Boy&seats=2
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const guest = params.get('guest');
+      const seats = params.get('seats');
+      
+      if (guest) {
+        const nameInput = document.getElementById('guestName');
+        if (nameInput) nameInput.value = guest;
+      }
+      if (seats && ['1', '2', '3'].includes(seats)) {
+        seatSelect.value = seats;
+        updateCompanionInputs();
+      }
+    });
+
     // 6. Countdown Timer
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
-
+    
+      const dEl = document.getElementById("days");
+      const hEl = document.getElementById("hours");
+      const mEl = document.getElementById("mins");
+      const sEl = document.getElementById("secs");
+    
       if (!isNaN(diff) && diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-        const dEl = document.getElementById("days");
-        const hEl = document.getElementById("hours");
-        const mEl = document.getElementById("mins");
-        const sEl = document.getElementById("secs");
-
+    
         if (dEl) dEl.innerText = String(days).padStart(2, '0');
         if (hEl) hEl.innerText = String(hours).padStart(2, '0');
         if (mEl) mEl.innerText = String(mins).padStart(2, '0');
         if (sEl) sEl.innerText = String(secs).padStart(2, '0');
+      } else {
+        if (dEl) dEl.innerText = "00";
+        if (hEl) hEl.innerText = "00";
+        if (mEl) mEl.innerText = "00";
+        if (sEl) sEl.innerText = "00";
       }
     }
     setInterval(updateCountdown, 1000);
