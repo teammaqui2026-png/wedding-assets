@@ -12,6 +12,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Instant Preload Hero Image -->
+  <link rel="preload" as="image" href="https://i.imgur.com/DeCF3mR.jpeg">
   
   <!-- Rose Petals Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -335,11 +338,11 @@
       font-weight: 400;
     }
 
-    /* --- Hero Section --- */
+    /* --- Optimized Hero Section --- */
     .hero-full {
       position: relative;
       width: 100%;
-      min-height: 100vh;
+      min-height: 100svh; /* Uses modern small-viewport height for mobile */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -347,26 +350,24 @@
       text-align: center;
       background-image: url('https://i.imgur.com/DeCF3mR.jpeg');
       background-size: cover;
-      background-position: center 60%;
+      background-position: center center; /* Keeps couple centered */
       background-repeat: no-repeat;
       color: var(--white);
-      padding: 50px 20px 60px;
+      padding: 50px 20px 40px;
       z-index: 1;
     }
-
+    
     .hero-overlay {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
+      /* Clean cinematic top-darkening with soft fade at the very bottom */
       background: linear-gradient(
         180deg, 
-        rgba(15, 26, 44, 0.72) 0%, 
-        rgba(15, 26, 44, 0.35) 20%, 
-        rgba(15, 26, 44, 0.00) 38%, 
-        rgba(15, 26, 44, 0.00) 65%,
-        rgba(247, 244, 238, 0.06) 78%,
-        rgba(247, 244, 238, 0.22) 85%,
-        rgba(247, 244, 238, 0.50) 91%,
-        rgba(247, 244, 238, 0.82) 96%,
+        rgba(15, 26, 44, 0.70) 0%, 
+        rgba(15, 26, 44, 0.25) 25%, 
+        rgba(15, 26, 44, 0.00) 45%, 
+        rgba(15, 26, 44, 0.00) 75%,
+        rgba(247, 244, 238, 0.60) 92%,
         rgba(247, 244, 238, 1.00) 100%
       );
       z-index: 1;
