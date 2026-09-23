@@ -1462,7 +1462,7 @@
       margin-top: 4px;
     }
 
-    /* --- 3. GIFT GUIDE & WISHING WELL STYLING --- */
+    /* --- 3. GIFT GUIDE WITH QR DOWNLOAD STYLING --- */
     .gift-poem {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
@@ -1476,27 +1476,30 @@
     .gift-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 18px;
       margin-top: 20px;
     }
     
     .gift-account-card {
       background: var(--beige-bg);
       border: 1px solid var(--beige-border);
-      border-radius: 16px;
-      padding: 20px 16px;
+      border-radius: 18px;
+      padding: 24px 18px 20px;
       text-align: center;
       position: relative;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     
     .gift-account-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(26, 43, 73, 0.08);
+      box-shadow: 0 10px 25px rgba(26, 43, 73, 0.08);
     }
     
     .gift-bank-name {
-      font-size: 0.85rem;
+      font-size: 0.92rem;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -1507,48 +1510,81 @@
     .gift-account-name {
       font-size: 0.82rem;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .gift-qr-wrapper {
+      width: 130px;
+      height: 130px;
+      background: var(--white);
+      border: 1px solid var(--beige-border);
+      border-radius: 12px;
+      padding: 6px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(26, 43, 73, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .gift-qr-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      display: block;
     }
     
     .gift-account-number {
       font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #101B2E;
       letter-spacing: 0.05em;
       background: var(--white);
       border: 1px dashed var(--pink-accent);
-      padding: 6px 10px;
+      padding: 6px 14px;
       border-radius: 8px;
-      margin-bottom: 12px;
-      display: block;
+      margin-bottom: 14px;
+      display: inline-block;
       user-select: all;
     }
     
-    .btn-copy-acc {
+    .gift-btn-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    
+    .btn-gift-action {
       background: var(--white);
       border: 1px solid var(--beige-border);
       border-radius: 50px;
-      padding: 6px 14px;
+      padding: 7px 14px;
       font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--navy);
+      text-decoration: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.2s ease;
     }
     
-    .btn-copy-acc:hover {
+    .btn-gift-action:hover {
       border-color: var(--pink-accent);
       background: var(--pink-soft);
       color: var(--pink-accent);
+      transform: translateY(-1px);
     }
     
-    .btn-copy-acc.copied {
+    .btn-gift-action.copied {
       background: #E8F5E9;
       border-color: #4CAF50;
       color: #2E7D32;
@@ -1866,24 +1902,46 @@
       </p>
     
       <div class="gift-grid">
-        <!-- GCash Account -->
+        <!-- GCash Card -->
         <div class="gift-account-card">
-          <p class="gift-bank-name">GCash</p>
-          <p class="gift-account-name">Lawrence M. / Sharmaine T.</p>
+          <p class="gift-bank-name" id="gcashTitle">GCash</p>
+          <p class="gift-account-name" id="gcashName">Lawrence M. / Sharmaine T.</p>
+          
+          <div class="gift-qr-wrapper">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GCash-Payment" id="gcashQrImg" alt="GCash QR Code" class="gift-qr-img">
+          </div>
+    
           <span class="gift-account-number" id="gcashAcc">0917 123 4567</span>
-          <button type="button" class="btn-copy-acc" onclick="copyAccountNumber('gcashAcc', this)">
-            <span>📋 Copy Number</span>
-          </button>
+    
+          <div class="gift-btn-group">
+            <button type="button" class="btn-gift-action" onclick="copyAccountNumber('gcashAcc', this)">
+              <span>📋 Copy Number</span>
+            </button>
+            <a href="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GCash-Payment" id="gcashQrDownload" target="_blank" download="GCash-QR.png" class="btn-gift-action">
+              <span>⬇ Save QR</span>
+            </a>
+          </div>
         </div>
     
-        <!-- Bank Account (e.g. BDO / BPI) -->
+        <!-- Bank Card (BDO / BPI / Maya) -->
         <div class="gift-account-card">
-          <p class="gift-bank-name">BDO Unibank</p>
-          <p class="gift-account-name">Lawrence Maqui</p>
+          <p class="gift-bank-name" id="bankTitle">BDO Unibank</p>
+          <p class="gift-account-name" id="bankName">Lawrence Maqui</p>
+          
+          <div class="gift-qr-wrapper">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Bank-Payment" id="bankQrImg" alt="Bank QR Code" class="gift-qr-img">
+          </div>
+    
           <span class="gift-account-number" id="bankAcc">1234 5678 9012</span>
-          <button type="button" class="btn-copy-acc" onclick="copyAccountNumber('bankAcc', this)">
-            <span>📋 Copy Number</span>
-          </button>
+    
+          <div class="gift-btn-group">
+            <button type="button" class="btn-gift-action" onclick="copyAccountNumber('bankAcc', this)">
+              <span>📋 Copy Number</span>
+            </button>
+            <a href="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Bank-Payment" id="bankQrDownload" target="_blank" download="Bank-QR.png" class="btn-gift-action">
+              <span>⬇ Save QR</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -2244,6 +2302,23 @@
                 <p class="entourage-names">${item.names}</p>
               </div>
             `).join('');
+          }
+
+          // DYNAMIC GIFT GUIDE / QR SYNC FROM GOOGLE SHEETS
+          if (cfg.GCash_Title) document.getElementById('gcashTitle').innerText = cfg.GCash_Title;
+          if (cfg.GCash_Name) document.getElementById('gcashName').innerText = cfg.GCash_Name;
+          if (cfg.GCash_Number) document.getElementById('gcashAcc').innerText = cfg.GCash_Number;
+          if (cfg.GCash_QR_URL) {
+            document.getElementById('gcashQrImg').src = cfg.GCash_QR_URL;
+            document.getElementById('gcashQrDownload').href = cfg.GCash_QR_URL;
+          }
+          
+          if (cfg.Bank_Title) document.getElementById('bankTitle').innerText = cfg.Bank_Title;
+          if (cfg.Bank_Name) document.getElementById('bankName').innerText = cfg.Bank_Name;
+          if (cfg.Bank_Number) document.getElementById('bankAcc').innerText = cfg.Bank_Number;
+          if (cfg.Bank_QR_URL) {
+            document.getElementById('bankQrImg').src = cfg.Bank_QR_URL;
+            document.getElementById('bankQrDownload').href = cfg.Bank_QR_URL;
           }
         })
         .catch(err => console.log("Using local cache:", err));
