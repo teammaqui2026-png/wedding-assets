@@ -1461,6 +1461,102 @@
       border-radius: 50px;
       margin-top: 4px;
     }
+
+    /* --- 3. GIFT GUIDE & WISHING WELL STYLING --- */
+    .gift-poem {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--navy);
+      max-width: 500px;
+      margin: 0 auto 24px;
+    }
+    
+    .gift-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    
+    .gift-account-card {
+      background: var(--beige-bg);
+      border: 1px solid var(--beige-border);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    
+    .gift-account-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(26, 43, 73, 0.08);
+    }
+    
+    .gift-bank-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    
+    .gift-account-name {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    
+    .gift-account-number {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #101B2E;
+      letter-spacing: 0.05em;
+      background: var(--white);
+      border: 1px dashed var(--pink-accent);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: block;
+      user-select: all;
+    }
+    
+    .btn-copy-acc {
+      background: var(--white);
+      border: 1px solid var(--beige-border);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-copy-acc:hover {
+      border-color: var(--pink-accent);
+      background: var(--pink-soft);
+      color: var(--pink-accent);
+    }
+    
+    .btn-copy-acc.copied {
+      background: #E8F5E9;
+      border-color: #4CAF50;
+      color: #2E7D32;
+    }
+    
+    @media (max-width: 600px) {
+      .gift-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -1748,6 +1844,47 @@
 
       <div class="attire-notice">
         ✨ <em>We kindly request our guests to reserve white and cream for the bride.</em>
+      </div>
+    </section>
+
+    <!-- 5. GIFT GUIDE / WISHING WELL CARD -->
+    <section class="card reveal-card" id="giftGuideSection">
+      <span class="section-eyebrow">With Love & Gratitude</span>
+      <h2 class="foil-text">Gift Guide</h2>
+      
+      <div class="flourish-divider">
+        <span class="flourish-line"></span>
+        <span class="flourish-ornament">❦</span>
+        <span class="flourish-line"></span>
+      </div>
+    
+      <p class="gift-poem">
+        "With all that we have, we’ve been truly blessed.<br>
+        Your presence and prayers are all that we request.<br>
+        But if you desire to give nonetheless,<br>
+        a monetary gift to help us build our home is one we suggest."
+      </p>
+    
+      <div class="gift-grid">
+        <!-- GCash Account -->
+        <div class="gift-account-card">
+          <p class="gift-bank-name">GCash</p>
+          <p class="gift-account-name">Lawrence M. / Sharmaine T.</p>
+          <span class="gift-account-number" id="gcashAcc">0917 123 4567</span>
+          <button type="button" class="btn-copy-acc" onclick="copyAccountNumber('gcashAcc', this)">
+            <span>📋 Copy Number</span>
+          </button>
+        </div>
+    
+        <!-- Bank Account (e.g. BDO / BPI) -->
+        <div class="gift-account-card">
+          <p class="gift-bank-name">BDO Unibank</p>
+          <p class="gift-account-name">Lawrence Maqui</p>
+          <span class="gift-account-number" id="bankAcc">1234 5678 9012</span>
+          <button type="button" class="btn-copy-acc" onclick="copyAccountNumber('bankAcc', this)">
+            <span>📋 Copy Number</span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -2530,6 +2667,23 @@
         }
       });
     })();
+
+    // --- 1-TAP CLIPBOARD COPY FOR GIFT GUIDE ---
+    function copyAccountNumber(elementId, btnElement) {
+      const accText = document.getElementById(elementId).innerText.replace(/\s+/g, '');
+      navigator.clipboard.writeText(accText).then(() => {
+        const originalText = btnElement.innerHTML;
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = "<span>✓ Copied!</span>";
+        
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.log("Copy failed:", err);
+      });
+    }
   </script>
 </body>
 </html>
