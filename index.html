@@ -39,6 +39,17 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent; /* Removes blue flash on phones */
+    }
+
+    /* Removes default blue focus outline on clicks */
+    button:focus,
+    a:focus,
+    .btn-submit:focus,
+    .attend-card:focus,
+    .btn-nav-link:focus,
+    .btn-lookbook:focus {
+      outline: none !important;
     }
 
     body {
