@@ -1884,7 +1884,16 @@
           const cfg = data.config || {};
           
           if (cfg.Hero_Image_URL) {
-            document.getElementById('heroFull').style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
+            const heroEl = document.getElementById('heroFull');
+            const currentBg = heroEl.style.backgroundImage;
+            // Only change if different to avoid double-loading
+            if (!currentBg.includes(cfg.Hero_Image_URL)) {
+              const img = new Image();
+              img.src = cfg.Hero_Image_URL;
+              img.onload = () => {
+                heroEl.style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
+              };
+            }
           }
 
           if (cfg.Couple_Names) {
