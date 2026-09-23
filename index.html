@@ -1401,6 +1401,66 @@
       font-style: italic;
       font-weight: 400;
     }
+
+    /* --- VIP PERSONALIZED GUEST GREETING BANNER --- */
+    .vip-banner {
+      display: none; /* Hidden by default; JS shows it if ?guest= is present */
+      background: linear-gradient(135deg, #FCFAF6 0%, #F9EBEA 100%);
+      border: 1.5px solid var(--pink-accent);
+      border-radius: 18px;
+      padding: 22px 20px;
+      margin: 0 auto 28px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(221, 165, 165, 0.25);
+      position: relative;
+      animation: fadeInVIP 0.8s ease forwards;
+    }
+    
+    @keyframes fadeInVIP {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .vip-banner::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px dashed rgba(221, 165, 165, 0.5);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+    
+    .vip-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--pink-accent);
+      font-size: 1.15rem;
+      margin-bottom: 2px;
+      display: block;
+    }
+    
+    .vip-guest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--navy);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    
+    .vip-seat-pill {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -1745,6 +1805,13 @@
         <span class="flourish-line"></span>
         <span class="flourish-ornament">❦</span>
         <span class="flourish-line"></span>
+      </div>
+
+      <!-- VIP PERSONALIZED GREETING BANNER -->
+      <div class="vip-banner" id="vipBanner">
+        <span class="vip-eyebrow">A Special Invitation For</span>
+        <h3 class="vip-guest-name" id="vipGuestName">Honored Guest</h3>
+        <span class="vip-seat-pill" id="vipSeatPill">We have reserved 2 seats in your honor</span>
       </div>
       
       <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 26px;" id="rsvpDeadline">Kindly respond until November 30, 2026</p>
@@ -2168,16 +2235,44 @@
     }
     seatSelect.addEventListener('change', updateCompanionInputs);
 
-    // Auto-populate guest name and seats from URL (e.g. ?guest=John+Doe&seats=2)
+    // Auto-populate guest name, seats, and VIP banner from URL (e.g. ?guest=Ninong+Pepito&seats=2)
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const guest = params.get('guest');
       const seats = params.get('seats');
       
       if (guest) {
+        const cleanGuestName = decodeURIComponent(guest.replace(/\+/g, ' '));
+        
+        // 1. Fill RSVP Form Input
         const nameInput = document.getElementById('guestName');
-        if (nameInput) nameInput.value = guest;
+        if (nameInput) nameInput.value = cleanGuestName;
+    
+        // 2. Show Personalized VIP Banner
+        const vipBanner = document.getElementById('vipBanner');
+        const vipGuestName = document.getElementById('vipGuestName');
+        const vipSeatPill = document.getElementById('vipSeatPill');
+        
+        if (vipBanner && vipGuestName) {
+          vipGuestName.innerText = cleanGuestName;
+          vipBanner.style.display = 'block';
+    
+          if (seats && ['1', '2', '3'].includes(seats)) {
+            const seatText = seats === '1' 
+              ? "We have joyfully reserved 1 seat in your honor" 
+              : `We have joyfully reserved ${seats} seats in your honor`;
+            vipSeatPill.innerText = seatText;
+          }
+        }
+    
+        // 3. Update Envelope Eyebrow
+        const envEyebrow = document.querySelector('.card-eyebrow');
+        if (envEyebrow) {
+          envEyebrow.innerText = `Exclusively Invited: ${cleanGuestName}`;
+        }
       }
+    
+      // Pre-select seat count
       if (seats && ['1', '2', '3'].includes(seats)) {
         seatSelect.value = seats;
         updateCompanionInputs();
