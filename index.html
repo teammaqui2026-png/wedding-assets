@@ -1334,6 +1334,73 @@
       .card { padding: 38px 20px; }
       .footer-names { font-size: 1.45rem; }
     }
+
+    /* --- 1. LUXURY COTTON PAPER TEXTURE & FOIL STYLING --- */
+
+    /* Subtle Cotton Texture Overlay */
+    .card {
+      position: relative;
+      background-color: #FCFAF6;
+      background-image: radial-gradient(rgba(221, 165, 165, 0.08) 1px, transparent 1px), radial-gradient(rgba(26, 43, 73, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      border-radius: 24px;
+      padding: 50px 36px;
+      margin-bottom: 34px;
+      border: 1px solid rgba(232, 223, 209, 0.85);
+      box-shadow: 0 16px 40px rgba(26, 43, 73, 0.06), 0 2px 14px rgba(221, 165, 165, 0.12);
+      text-align: center;
+    }
+    
+    /* Debossed Double Border Frame */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(221, 165, 165, 0.35);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+    
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 13px;
+      border: 1px dashed rgba(232, 223, 209, 0.6);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+    
+    /* Rose-Gold Foil Metallic Shimmer on Headings */
+    .foil-text {
+      background: linear-gradient(135deg, #1A2B49 0%, #B37373 40%, #DDA5A5 60%, #1A2B49 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: foilShimmer 8s linear infinite;
+      font-weight: 500;
+    }
+    
+    @keyframes foilShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Classic Editorial Drop-Cap for Story */
+    /* Automatically styles the first letter of the first story milestone */
+    .timeline-item:first-child .timeline-desc::first-letter {
+      float: left;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.4rem;
+      line-height: 0.8;
+      padding-top: 4px;
+      padding-right: 8px;
+      padding-bottom: 2px;
+      color: var(--pink-accent);
+      font-style: italic;
+      font-weight: 400;
+    }
   </style>
 </head>
 <body>
@@ -1413,7 +1480,7 @@
     <!-- 1. OUR STORY TIMELINE -->
     <section class="card reveal-card">
       <span class="section-eyebrow">How It All Began</span>
-      <h2>Our Story</h2>
+      <h2 class="foil-text">Our Story</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1448,7 +1515,7 @@
     <!-- 2. SAVE THE DATE VIDEO -->
     <section class="card reveal-card" id="saveTheDateSection">
       <span class="section-eyebrow">Our Journey in Motion</span>
-      <h2>Save The Date</h2>
+      <h2 class="foil-text">Save The Date</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1480,7 +1547,7 @@
     <!-- 3. MINI ENGAGEMENT PHOTO LOOKBOOK -->
     <section class="card reveal-card">
       <span class="section-eyebrow">Captured Moments</span>
-      <h2>Our Journey</h2>
+      <h2 class="foil-text">Our Journey</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1507,7 +1574,7 @@
     <!-- 4. The Celebration Card -->
     <section class="card reveal-card" id="celebration">
       <span class="section-eyebrow">Join Us In</span>
-      <h2>The Celebration</h2>
+      <h2 class="foil-text">The Celebration</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1583,7 +1650,7 @@
     <!-- 5. Attire & Color Palette Card -->
     <section class="card reveal-card">
       <span class="section-eyebrow">What to Wear</span>
-      <h2>Attire & Palette</h2>
+      <h2 class="foil-text">Attire & Palette</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1627,7 +1694,7 @@
     <!-- 6. WEDDING ENTOURAGE & SPONSORS -->
     <section class="card reveal-card">
       <span class="section-eyebrow">With Gratitude</span>
-      <h2>Wedding Entourage</h2>
+      <h2 class="foil-text">Wedding Entourage</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1672,7 +1739,7 @@
     <!-- 7. SENIOR-FRIENDLY RSVP FORM -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
-      <h2>RSVP</h2>
+      <h2 class="foil-text">RSVP</h2>
       
       <div class="flourish-divider">
         <span class="flourish-line"></span>
@@ -1944,9 +2011,11 @@
             const timelineContainer = document.getElementById('timelineWrapper');
             timelineContainer.innerHTML = data.story.map(item => `
               <div class="timeline-item">
-                <div class="timeline-year-pill">${item.year}</div>
-                <h3 class="timeline-title">${item.title}</h3>
-                <p class="timeline-desc">${item.story}</p>
+                <div class="timeline-year-pill">2018</div>
+                <h3 class="timeline-title">The First Hello</h3>
+                <p class="timeline-desc">
+                  <span class="drop-cap">W</span>hat began as a simple conversation quickly turned into shared laughter, late-night talks, and the quiet realization that we had found something rare.
+                </p>
               </div>
             `).join('');
           }
