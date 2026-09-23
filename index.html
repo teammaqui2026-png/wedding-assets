@@ -2415,47 +2415,114 @@
       return null;
     }
 
+    // --- HELPER 1: CONVERT GOOGLE DRIVE LINKS ON CLIENT-SIDE ---
+    function formatDriveImage(url) {
+      if (!url || typeof url !== 'string') return url;
+      if (url.includes('drive.google.com')) {
+        const match = url.match(/[-\w]{25,}/);
+        if (match) return `https://lh3.googleusercontent.com/d/${match[0]}=w1200`;
+      }
+      return url;
+    }
+
+    // --- HELPER 2: PARSE YOUTUBE VIDEO ID / LINK ---
+    function parseYouTubeId(input) {
+      if (!input || typeof input !== 'string') return null;
+      input = input.trim();
+      if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = input.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : input;
+    }
+
+    // --- HELPER 3: SAFE DATE PARSER ---
+    function parseDateSafe(dateString) {
+      if (!dateString) return null;
+      let d = new Date(dateString);
+      if (!isNaN(d.getTime())) return d.getTime();
+
+      let normalized = dateString.trim().replace(/-/g, '/');
+      d = new Date(normalized);
+      if (!isNaN(d.getTime())) return d.getTime();
+
+      return null;
+    }
+
+    // --- COMPLETE DYNAMIC GOOGLE SHEETS SYNC ---
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
           
+          // 1. Hero Image Background
           if (cfg.Hero_Image_URL) {
             const heroEl = document.getElementById('heroFull');
-            const currentBg = heroEl.style.backgroundImage;
-            // Only change if different to avoid double-loading
-            if (!currentBg.includes(cfg.Hero_Image_URL)) {
-              const img = new Image();
-              img.src = cfg.Hero_Image_URL;
-              img.onload = () => {
-                heroEl.style.backgroundImage = `url('${cfg.Hero_Image_URL}')`;
-              };
+            const formattedHero = formatDriveImage(cfg.Hero_Image_URL);
+            if (heroEl && !heroEl.style.backgroundImage.includes(formattedHero)) {
+              heroEl.style.backgroundImage = `url('${formattedHero}')`;
             }
           }
 
+          // 2. Couple Names (Document Title, Hero & Envelope)
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
               ? `${cfg.Couple_Names.split('&')[0].trim()} <span class="amp">&</span> ${cfg.Couple_Names.split('&')[1].trim()}`
               : cfg.Couple_Names;
-            document.getElementById('heroTitle').innerHTML = namesHtml;
-            document.getElementById('envNames').innerHTML = namesHtml;
+            const heroTitle = document.getElementById('heroTitle');
+            const envNames = document.getElementById('envNames');
+            if (heroTitle) heroTitle.innerHTML = namesHtml;
+            if (envNames) envNames.innerHTML = namesHtml;
           }
-          if (cfg.Hero_Subtitle) document.getElementById('heroSub').innerText = cfg.Hero_Subtitle;
-          if (cfg.Event_Date_Display) document.getElementById('heroDate').innerText = cfg.Event_Date_Display;
+
+          // 3. Subtitles & Event Date
+          if (cfg.Hero_Subtitle) {
+            const sub = document.getElementById('heroSub');
+            if (sub) sub.innerText = cfg.Hero_Subtitle;
+          }
+          if (cfg.Event_Date_Display) {
+            const dateEl = document.getElementById('heroDate');
+            if (dateEl) dateEl.innerText = cfg.Event_Date_Display;
+          }
           
-          if (cfg.Ceremony_Time) document.getElementById('ceremonyTime').innerText = cfg.Ceremony_Time;
-          if (cfg.Ceremony_Venue) document.getElementById('ceremonyVenue').innerText = cfg.Ceremony_Venue;
-          if (cfg.Ceremony_Address) document.getElementById('ceremonyAddress').innerText = cfg.Ceremony_Address;
-          if (cfg.Map_Ceremony_URL) document.getElementById('ceremonyMapLink').href = cfg.Map_Ceremony_URL;
+          // 4. Ceremony Details & Map Link
+          if (cfg.Ceremony_Time) {
+            const el = document.getElementById('ceremonyTime');
+            if (el) el.innerText = cfg.Ceremony_Time;
+          }
+          if (cfg.Ceremony_Venue) {
+            const el = document.getElementById('ceremonyVenue');
+            if (el) el.innerText = cfg.Ceremony_Venue;
+          }
+          if (cfg.Ceremony_Address) {
+            const el = document.getElementById('ceremonyAddress');
+            if (el) el.innerText = cfg.Ceremony_Address;
+          }
+          if (cfg.Map_Ceremony_URL) {
+            const el = document.getElementById('ceremonyMapLink');
+            if (el) el.href = cfg.Map_Ceremony_URL;
+          }
 
-          if (cfg.Reception_Time) document.getElementById('receptionTime').innerText = cfg.Reception_Time;
-          if (cfg.Reception_Venue) document.getElementById('receptionVenue').innerText = cfg.Reception_Venue;
-          if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
-          if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
+          // 5. Reception Details & Map Link
+          if (cfg.Reception_Time) {
+            const el = document.getElementById('receptionTime');
+            if (el) el.innerText = cfg.Reception_Time;
+          }
+          if (cfg.Reception_Venue) {
+            const el = document.getElementById('receptionVenue');
+            if (el) el.innerText = cfg.Reception_Venue;
+          }
+          if (cfg.Reception_Note) {
+            const el = document.getElementById('receptionNote');
+            if (el) el.innerText = cfg.Reception_Note;
+          }
+          if (cfg.Map_Reception_URL) {
+            const el = document.getElementById('receptionMapLink');
+            if (el) el.href = cfg.Map_Reception_URL;
+          }
 
-          // YouTube Video Sync
+          // 6. YouTube Save The Date Video
           const sheetVideo = cfg.YouTube_Video_ID || cfg.Video_URL;
           if (sheetVideo) {
             const parsedId = parseYouTubeId(sheetVideo);
@@ -2467,6 +2534,33 @@
             }
           }
 
+          // 7. GCash Gift Guide
+          const gTitle = document.getElementById('gcashTitle');
+          const gName = document.getElementById('gcashName');
+          const gAcc = document.getElementById('gcashAcc');
+          const gImg = document.getElementById('gcashQrImg');
+          if (gTitle && cfg.GCash_Title) gTitle.innerText = cfg.GCash_Title;
+          if (gName && cfg.GCash_Name) gName.innerText = cfg.GCash_Name;
+          if (gAcc && cfg.GCash_Number) gAcc.innerText = cfg.GCash_Number;
+          if (gImg && cfg.GCash_QR_URL) gImg.src = formatDriveImage(cfg.GCash_QR_URL);
+
+          // 8. Bank (Gotyme / BDO / BPI) Gift Guide
+          const bTitle = document.getElementById('bankTitle');
+          const bName = document.getElementById('bankName');
+          const bAcc = document.getElementById('bankAcc');
+          const bImg = document.getElementById('bankQrImg');
+          if (bTitle && cfg.Bank_Title) bTitle.innerText = cfg.Bank_Title;
+          if (bName && cfg.Bank_Name) bName.innerText = cfg.Bank_Name;
+          if (bAcc && cfg.Bank_Number) bAcc.innerText = cfg.Bank_Number;
+          if (bImg && cfg.Bank_QR_URL) bImg.src = formatDriveImage(cfg.Bank_QR_URL);
+
+          // 9. Wedding Hashtag
+          if (cfg.Wedding_Hashtag) {
+            const tagEl = document.getElementById('weddingHashtag');
+            if (tagEl) tagEl.innerText = cfg.Wedding_Hashtag;
+          }
+
+          // 10. Countdown Target Date
           if (cfg.Countdown_Target) {
             const parsedTarget = parseDateSafe(cfg.Countdown_Target);
             if (parsedTarget) {
@@ -2475,81 +2569,56 @@
             }
           }
 
-          if (cfg.RSVP_Deadline) document.getElementById('rsvpDeadline').innerText = cfg.RSVP_Deadline;
+          // 11. RSVP Deadline
+          if (cfg.RSVP_Deadline) {
+            const dl = document.getElementById('rsvpDeadline');
+            if (dl) dl.innerText = cfg.RSVP_Deadline;
+          }
 
-          // DYNAMIC STORY MILESTONES
+          // 12. Dynamic Story Milestones
           if (data.story && data.story.length > 0) {
             const timelineContainer = document.getElementById('timelineWrapper');
-            timelineContainer.innerHTML = data.story.map(item => `
-              <div class="timeline-item">
-                <div class="timeline-year-pill">2018</div>
-                <h3 class="timeline-title">The First Hello</h3>
-                <p class="timeline-desc">
-                  <span class="drop-cap">W</span>hat began as a simple conversation quickly turned into shared laughter, late-night talks, and the quiet realization that we had found something rare.
-                </p>
-              </div>
-            `).join('');
+            if (timelineContainer) {
+              timelineContainer.innerHTML = data.story.map(item => `
+                <div class="timeline-item">
+                  <div class="timeline-year-pill">${item.year}</div>
+                  <h3 class="timeline-title">${item.title}</h3>
+                  <p class="timeline-desc">${item.story}</p>
+                </div>
+              `).join('');
+            }
           }
 
-          // DYNAMIC GALLERY LOOKBOOK
+          // 13. Dynamic Gallery Lookbook
           if (data.gallery && data.gallery.length > 0) {
             const galleryContainer = document.getElementById('galleryGrid');
-            galleryContainer.innerHTML = data.gallery.map(item => `
-              <div class="gallery-polaroid">
-                <img src="${item.url}" alt="${item.caption || 'Engagement Photo'}">
-                <p class="polaroid-caption">${item.caption || ''}</p>
-              </div>
-            `).join('');
+            if (galleryContainer) {
+              galleryContainer.innerHTML = data.gallery.map(item => `
+                <div class="gallery-polaroid">
+                  <img src="${formatDriveImage(item.url)}" alt="${item.caption || 'Engagement Photo'}">
+                  <p class="polaroid-caption">${item.caption || ''}</p>
+                </div>
+              `).join('');
+            }
           }
 
-          // DYNAMIC ENTOURAGE
+          // 14. Dynamic Entourage
           if (data.entourage && data.entourage.length > 0) {
             const entourageContainer = document.getElementById('entourageContent');
-            entourageContainer.innerHTML = data.entourage.map(item => `
-              <div class="entourage-group">
-                <p class="entourage-role">${item.role}</p>
-                <p class="entourage-names">${item.names}</p>
-              </div>
-            `).join('');
-          }
-
-          // --- HELPER TO CONVERT GOOGLE DRIVE LINKS ON CLIENT-SIDE ---
-          function formatDriveImage(url) {
-            if (!url || typeof url !== 'string') return url;
-            if (url.includes('drive.google.com')) {
-              const match = url.match(/[-\w]{25,}/);
-              if (match) return `https://lh3.googleusercontent.com/d/${match[0]}=w1000`;
+            if (entourageContainer) {
+              entourageContainer.innerHTML = data.entourage.map(item => `
+                <div class="entourage-group">
+                  <p class="entourage-role">${item.role}</p>
+                  <p class="entourage-names">${item.names}</p>
+                </div>
+              `).join('');
             }
-            return url;
           }
-          
-          // Inside syncSheetData() -> .then(data => { ...
-          const cfg = data.config || {};
-          
-          // GCash Safe Hydration
-          const gTitle = document.getElementById('gcashTitle');
-          const gName = document.getElementById('gcashName');
-          const gAcc = document.getElementById('gcashAcc');
-          const gImg = document.getElementById('gcashQrImg');
-          
-          if (gTitle && cfg.GCash_Title) gTitle.innerText = cfg.GCash_Title;
-          if (gName && cfg.GCash_Name) gName.innerText = cfg.GCash_Name;
-          if (gAcc && cfg.GCash_Number) gAcc.innerText = cfg.GCash_Number;
-          if (gImg && cfg.GCash_QR_URL) gImg.src = formatDriveImage(cfg.GCash_QR_URL);
-          
-          // Gotyme Bank Safe Hydration
-          const bTitle = document.getElementById('bankTitle');
-          const bName = document.getElementById('bankName');
-          const bAcc = document.getElementById('bankAcc');
-          const bImg = document.getElementById('bankQrImg');
-          
-          if (bTitle && cfg.Bank_Title) bTitle.innerText = cfg.Bank_Title;
-          if (bName && cfg.Bank_Name) bName.innerText = cfg.Bank_Name;
-          if (bAcc && cfg.Bank_Number) bAcc.innerText = cfg.Bank_Number;
-          if (bImg && cfg.Bank_QR_URL) bImg.src = formatDriveImage(cfg.Bank_QR_URL);
         })
         .catch(err => console.log("Using local cache:", err));
     }
+
+    // Call once on page load
     syncSheetData();
 
     // 2. Envelope Animation
