@@ -2014,20 +2014,16 @@
       font-weight: 500;
     }
 
-    /* --- 3. LUXURY TOUCH-SWIPEABLE GALLERY LIGHTBOX --- */
-    .gallery-polaroid {
-      cursor: pointer;
-      user-select: none;
-    }
-    
+    /* --- LUXURY TOUCH & DRAG SWIPEABLE LIGHTBOX --- */
     .gallery-lightbox {
       position: fixed;
       inset: 0;
-      z-index: 100000;
-      background: rgba(10, 16, 27, 0.94);
+      z-index: 999999;
+      background: rgba(10, 16, 27, 0.95);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       opacity: 0;
@@ -2044,36 +2040,62 @@
     
     .lightbox-content-box {
       position: relative;
-      max-width: 90vw;
-      max-height: 85vh;
+      width: 100%;
+      max-width: 800px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 0 20px;
     }
     
     .lightbox-img-wrap {
       position: relative;
-      max-width: 100%;
-      max-height: 70vh;
+      width: 100%;
+      max-height: 68vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      cursor: grab;
+    }
+    
+    .lightbox-img-wrap:active {
+      cursor: grabbing;
     }
     
     .lightbox-img-wrap img {
-      max-width: 100%;
-      max-height: 70vh;
+      max-width: 90vw;
+      max-height: 68vh;
       border-radius: 14px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
       border: 1.5px solid rgba(221, 165, 165, 0.45);
       object-fit: contain;
       display: block;
-      transition: transform 0.25s ease, opacity 0.25s ease;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      pointer-events: none; /* Prevents default image drag */
+    }
+    
+    .lightbox-img-wrap img.slide-next {
+      animation: slideInRight 0.35s ease forwards;
+    }
+    
+    .lightbox-img-wrap img.slide-prev {
+      animation: slideInLeft 0.35s ease forwards;
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
     }
     
     .lightbox-meta {
-      margin-top: 14px;
+      margin-top: 16px;
       text-align: center;
     }
     
@@ -2081,30 +2103,35 @@
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       color: #F4DADA;
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       letter-spacing: 0.04em;
       margin-bottom: 4px;
     }
     
     .lightbox-counter-pill {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(221, 165, 165, 0.35);
+      padding: 3px 14px;
+      border-radius: 50px;
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #A59B8E;
+      color: #F4DADA;
       font-weight: 600;
     }
     
-    /* Close & Nav Buttons */
+    /* Luxury Navigation Arrows */
     .lightbox-btn-close {
       position: absolute;
       top: 20px;
       right: 20px;
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(221, 165, 165, 0.45);
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(221, 165, 165, 0.5);
       color: #FFFFFF;
       font-size: 1.8rem;
       display: flex;
@@ -2113,7 +2140,7 @@
       cursor: pointer;
       line-height: 1;
       transition: all 0.2s ease;
-      z-index: 10;
+      z-index: 1000002;
     }
     
     .lightbox-btn-close:hover {
@@ -2125,20 +2152,22 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 46px;
-      height: 46px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(221, 165, 165, 0.45);
+      background: rgba(15, 26, 44, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(221, 165, 165, 0.6);
       color: #FFFFFF;
-      font-size: 1.8rem;
+      font-size: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       line-height: 1;
       transition: all 0.2s ease;
-      z-index: 10;
+      z-index: 1000002;
     }
     
     .lightbox-nav-arrow:hover {
@@ -2146,12 +2175,17 @@
       transform: translateY(-50%) scale(1.1);
     }
     
-    .lightbox-nav-arrow.prev { left: 16px; }
-    .lightbox-nav-arrow.next { right: 16px; }
+    .lightbox-nav-arrow.prev { left: 20px; }
+    .lightbox-nav-arrow.next { right: 20px; }
     
     @media (max-width: 600px) {
-      .lightbox-nav-arrow { display: none; } /* On mobile, users swipe smoothly with touch */
-      .lightbox-img-wrap img { max-height: 65vh; }
+      .lightbox-nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.6rem;
+      }
+      .lightbox-nav-arrow.prev { left: 8px; }
+      .lightbox-nav-arrow.next { right: 8px; }
     }
   </style>
 </head>
@@ -3453,11 +3487,10 @@
       }
     })();
 
-    // --- 18. BULLETPROOF TOUCH-SWIPEABLE GALLERY LIGHTBOX ---
+    // --- 18. ENHANCED TOUCH & DRAG SWIPER LOGIC ---
     let galleryImages = [];
     let currentImageIndex = 0;
 
-    // Collect all current photos dynamically from the grid
     function getLiveGalleryData() {
       const list = [];
       document.querySelectorAll('.gallery-polaroid').forEach(polaroid => {
@@ -3478,7 +3511,7 @@
       if (!galleryImages.length) return;
 
       currentImageIndex = index;
-      renderLightboxImage();
+      renderLightboxImage('next');
       
       const modal = document.getElementById('touchLightbox');
       if (modal) modal.classList.add('is-active');
@@ -3489,7 +3522,7 @@
       if (modal) modal.classList.remove('is-active');
     }
 
-    function renderLightboxImage() {
+    function renderLightboxImage(directionClass = 'next') {
       if (!galleryImages.length) return;
       if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
       if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
@@ -3500,20 +3533,22 @@
       const countEl = document.getElementById('lightboxCounter');
 
       if (imgEl) {
-        imgEl.style.opacity = '0.4';
+        imgEl.className = ''; // Reset animation
+        void imgEl.offsetWidth; // Trigger reflow
+        imgEl.className = directionClass === 'next' ? 'slide-next' : 'slide-prev';
         imgEl.src = item.src;
-        imgEl.onload = () => { imgEl.style.opacity = '1'; };
       }
       if (capEl) capEl.innerText = item.caption || '';
       if (countEl) countEl.innerText = `Photo ${currentImageIndex + 1} of ${galleryImages.length}`;
     }
 
-    function navigateLightbox(direction) {
+    function navigateLightbox(direction, event) {
+      if (event) event.stopPropagation();
       currentImageIndex += direction;
-      renderLightboxImage();
+      renderLightboxImage(direction > 0 ? 'next' : 'prev');
     }
 
-    // Global Click Delegation: Automatically catches clicks on any photo (even from Google Sheets)
+    // Global Click Listener for Gallery Cards
     document.addEventListener('click', function(e) {
       const polaroid = e.target.closest('.gallery-polaroid');
       if (!polaroid) return;
@@ -3526,29 +3561,38 @@
       }
     });
 
-    // Touch Swipe Gesture Detection for Mobile
-    let touchStartX = 0;
-    let touchEndX = 0;
+    // Touch and Mouse Drag Gesture Support
+    let startX = 0;
+    let endX = 0;
+    let isDragging = false;
     const lightboxModal = document.getElementById('touchLightbox');
+    const imgWrap = document.getElementById('lightboxImgWrap');
 
-    if (lightboxModal) {
-      lightboxModal.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
+    if (lightboxModal && imgWrap) {
+      // Touch events (Mobile)
+      imgWrap.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
       }, { passive: true });
 
-      lightboxModal.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const swipeDistance = touchEndX - touchStartX;
-        if (Math.abs(swipeDistance) > 45) {
-          if (swipeDistance < 0) {
-            navigateLightbox(1); // Swiped Left -> Next
-          } else {
-            navigateLightbox(-1); // Swiped Right -> Previous
-          }
-        }
+      imgWrap.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
       }, { passive: true });
 
-      // Click dark backdrop to close
+      // Mouse drag events (Desktop)
+      imgWrap.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+      });
+
+      window.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        endX = e.clientX;
+        handleSwipe();
+      });
+
+      // Close when clicking dark background
       lightboxModal.addEventListener('click', (e) => {
         if (e.target.id === 'touchLightbox' || e.target.id === 'lightboxContentBox') {
           closeTouchLightbox();
@@ -3556,7 +3600,18 @@
       });
     }
 
-    // Keyboard Arrow & Esc Navigation
+    function handleSwipe() {
+      const diff = endX - startX;
+      if (Math.abs(diff) > 40) {
+        if (diff < 0) {
+          navigateLightbox(1); // Swiped Left -> Next
+        } else {
+          navigateLightbox(-1); // Swiped Right -> Previous
+        }
+      }
+    }
+
+    // Keyboard Arrow navigation
     document.addEventListener('keydown', (e) => {
       const modal = document.getElementById('touchLightbox');
       if (modal && modal.classList.contains('is-active')) {
@@ -3608,12 +3663,12 @@
 
   <!-- TOUCH-SWIPEABLE FULL-SCREEN GALLERY LIGHTBOX -->
   <div class="gallery-lightbox" id="touchLightbox">
-    <button type="button" class="lightbox-btn-close" id="lightboxCloseBtn" onclick="closeTouchLightbox()">&times;</button>
-    <button type="button" class="lightbox-nav-arrow prev" onclick="navigateLightbox(-1)" aria-label="Previous photo">&#8249;</button>
-    <button type="button" class="lightbox-nav-arrow next" onclick="navigateLightbox(1)" aria-label="Next photo">&#8250;</button>
+    <button type="button" class="lightbox-btn-close" onclick="closeTouchLightbox()">&times;</button>
+    <button type="button" class="lightbox-nav-arrow prev" onclick="navigateLightbox(-1, event)" aria-label="Previous photo">&#8249;</button>
+    <button type="button" class="lightbox-nav-arrow next" onclick="navigateLightbox(1, event)" aria-label="Next photo">&#8250;</button>
 
     <div class="lightbox-content-box" id="lightboxContentBox">
-      <div class="lightbox-img-wrap">
+      <div class="lightbox-img-wrap" id="lightboxImgWrap">
         <img id="lightboxMainImg" src="" alt="Enlarged engagement photo">
       </div>
       <div class="lightbox-meta">
