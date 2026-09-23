@@ -2608,7 +2608,7 @@
   </div>
 
   <script>
-    // --- DYNAMIC "L+S" CANVAS FAVICON INJECTOR ---
+    // --- 1. DYNAMIC "L+S" CANVAS FAVICON INJECTOR ---
     function setCustomFavicon() {
       try {
         const canvas = document.createElement('canvas');
@@ -2644,24 +2644,39 @@
     }
     setCustomFavicon();
 
-    // --- LUXURY CINEMA VIDEO PLAYER LOGIC ---
-    let currentYouTubeId = "dQw4w9WgXcQ"; // Fallback ID
+    // --- 2. NOW PLAYING SONG TOAST ---
+    let songToastTimer = null;
+    function showSongToast(duration = 5000) {
+      const toast = document.getElementById('songToast');
+      if (!toast) return;
+      toast.classList.add('is-visible');
+      if (songToastTimer) clearTimeout(songToastTimer);
+      songToastTimer = setTimeout(() => {
+        toast.classList.remove('is-visible');
+      }, duration);
+    }
+    function hideSongToast() {
+      const toast = document.getElementById('songToast');
+      if (toast) toast.classList.remove('is-visible');
+    }
+
+    // --- 3. YOUTUBE VIDEO SYNC & AUTO AUDIO PAUSE ---
+    let currentYouTubeId = "dQw4w9WgXcQ";
     let ytPlayer = null;
-    let ytReady = false;
-    
-    // Inject YouTube API
+
     const ytScript = document.createElement('script');
     ytScript.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(ytScript);
-    
+
     function parseYouTubeId(input) {
-      if (!input) return null;
+      if (!input || typeof input !== 'string') return null;
       input = input.trim();
       if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
-      const match = input.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = input.match(regExp);
       return (match && match[2].length === 11) ? match[2] : input;
     }
-    
+
     window.onYouTubeIframeAPIReady = function() {
       ytPlayer = new YT.Player('youtubePlayer', {
         videoId: currentYouTubeId,
@@ -2672,23 +2687,20 @@
           'controls': 1
         },
         events: {
-          'onReady': () => { ytReady = true; },
           'onStateChange': onPlayerStateChange
         }
       });
     };
-    
+
     function startCinematicVideo() {
       const cover = document.getElementById('cinemaCover');
       if (cover) cover.classList.add('is-hidden');
-    
       if (ytPlayer && ytPlayer.playVideo) {
         ytPlayer.playVideo();
       }
     }
-    
+
     function onPlayerStateChange(event) {
-      // 1 = Playing: Pause background music
       if (event.data === YT.PlayerState.PLAYING) {
         if (isPlaying) {
           audio.pause();
@@ -2696,9 +2708,7 @@
           musicText.innerText = "Play";
           isPlaying = false;
         }
-      }
-      // 2 = Paused, 0 = Ended: Resume background music
-      else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
         if (hasOpened && !isPlaying) {
           audio.play().then(() => {
             disc.classList.add('playing');
@@ -2706,7 +2716,6 @@
             isPlaying = true;
           }).catch(err => console.log(err));
         }
-        // If ended, bring cover back
         if (event.data === YT.PlayerState.ENDED) {
           const cover = document.getElementById('cinemaCover');
           if (cover) cover.classList.remove('is-hidden');
@@ -2714,24 +2723,10 @@
       }
     }
 
-    // --- LIVE GOOGLE APPS SCRIPT API INTEGRATION ---
+    // --- 4. LIVE GOOGLE APPS SCRIPT API INTEGRATION ---
     const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwwWFCoCa89gJqEOp65QY7cm-afjpiFJn1c4miWINlBKT_az-E8bKmMLkF177jzPbxG/exec";
-
     let weddingDate = new Date("December 19, 2026 14:00:00").getTime();
 
-    function parseDateSafe(dateString) {
-      if (!dateString) return null;
-      let d = new Date(dateString);
-      if (!isNaN(d.getTime())) return d.getTime();
-
-      let normalized = dateString.trim().replace(/-/g, '/');
-      d = new Date(normalized);
-      if (!isNaN(d.getTime())) return d.getTime();
-
-      return null;
-    }
-
-    // --- HELPER 1: CONVERT GOOGLE DRIVE LINKS ON CLIENT-SIDE ---
     function formatDriveImage(url) {
       if (!url || typeof url !== 'string') return url;
       if (url.includes('drive.google.com')) {
@@ -2741,37 +2736,22 @@
       return url;
     }
 
-    // --- HELPER 2: PARSE YOUTUBE VIDEO ID / LINK ---
-    function parseYouTubeId(input) {
-      if (!input || typeof input !== 'string') return null;
-      input = input.trim();
-      if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = input.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : input;
-    }
-
-    // --- HELPER 3: SAFE DATE PARSER ---
     function parseDateSafe(dateString) {
       if (!dateString) return null;
       let d = new Date(dateString);
       if (!isNaN(d.getTime())) return d.getTime();
-
       let normalized = dateString.trim().replace(/-/g, '/');
       d = new Date(normalized);
       if (!isNaN(d.getTime())) return d.getTime();
-
       return null;
     }
 
-    // --- COMPLETE DYNAMIC GOOGLE SHEETS SYNC ---
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const cfg = data.config || {};
           
-          // 1. Hero Image Background
           if (cfg.Hero_Image_URL) {
             const heroEl = document.getElementById('heroFull');
             const formattedHero = formatDriveImage(cfg.Hero_Image_URL);
@@ -2780,7 +2760,6 @@
             }
           }
 
-          // 2. Couple Names (Document Title, Hero & Envelope)
           if (cfg.Couple_Names) {
             document.title = cfg.Couple_Names + " | Wedding Invitation";
             const namesHtml = cfg.Couple_Names.includes('&') 
@@ -2792,7 +2771,6 @@
             if (envNames) envNames.innerHTML = namesHtml;
           }
 
-          // 3. Subtitles & Event Date
           if (cfg.Hero_Subtitle) {
             const sub = document.getElementById('heroSub');
             if (sub) sub.innerText = cfg.Hero_Subtitle;
@@ -2801,8 +2779,21 @@
             const dateEl = document.getElementById('heroDate');
             if (dateEl) dateEl.innerText = cfg.Event_Date_Display;
           }
+
+          if (cfg.Scripture_Verse) {
+            const sText = document.getElementById('scriptureText');
+            if (sText) sText.innerText = `"${cfg.Scripture_Verse}"`;
+          }
+          if (cfg.Scripture_Ref) {
+            const sRef = document.getElementById('scriptureRef');
+            if (sRef) sRef.innerText = cfg.Scripture_Ref;
+          }
+
+          if (cfg.Song_Title) {
+            const songEl = document.getElementById('songToastTitle');
+            if (songEl) songEl.innerText = cfg.Song_Title;
+          }
           
-          // 4. Ceremony Details & Map Link
           if (cfg.Ceremony_Time) {
             const el = document.getElementById('ceremonyTime');
             if (el) el.innerText = cfg.Ceremony_Time;
@@ -2820,7 +2811,6 @@
             if (el) el.href = cfg.Map_Ceremony_URL;
           }
 
-          // 5. Reception Details & Map Link
           if (cfg.Reception_Time) {
             const el = document.getElementById('receptionTime');
             if (el) el.innerText = cfg.Reception_Time;
@@ -2838,7 +2828,6 @@
             if (el) el.href = cfg.Map_Reception_URL;
           }
 
-          // 6. YouTube Save The Date Video
           const sheetVideo = cfg.YouTube_Video_ID || cfg.Video_URL;
           if (sheetVideo) {
             const parsedId = parseYouTubeId(sheetVideo);
@@ -2850,7 +2839,6 @@
             }
           }
 
-          // 7. GCash Gift Guide
           const gTitle = document.getElementById('gcashTitle');
           const gName = document.getElementById('gcashName');
           const gAcc = document.getElementById('gcashAcc');
@@ -2860,7 +2848,6 @@
           if (gAcc && cfg.GCash_Number) gAcc.innerText = cfg.GCash_Number;
           if (gImg && cfg.GCash_QR_URL) gImg.src = formatDriveImage(cfg.GCash_QR_URL);
 
-          // 8. Bank (Gotyme / BDO / BPI) Gift Guide
           const bTitle = document.getElementById('bankTitle');
           const bName = document.getElementById('bankName');
           const bAcc = document.getElementById('bankAcc');
@@ -2870,13 +2857,11 @@
           if (bAcc && cfg.Bank_Number) bAcc.innerText = cfg.Bank_Number;
           if (bImg && cfg.Bank_QR_URL) bImg.src = formatDriveImage(cfg.Bank_QR_URL);
 
-          // 9. Wedding Hashtag
           if (cfg.Wedding_Hashtag) {
             const tagEl = document.getElementById('weddingHashtag');
             if (tagEl) tagEl.innerText = cfg.Wedding_Hashtag;
           }
 
-          // 10. Countdown Target Date
           if (cfg.Countdown_Target) {
             const parsedTarget = parseDateSafe(cfg.Countdown_Target);
             if (parsedTarget) {
@@ -2885,13 +2870,11 @@
             }
           }
 
-          // 11. RSVP Deadline
           if (cfg.RSVP_Deadline) {
             const dl = document.getElementById('rsvpDeadline');
             if (dl) dl.innerText = cfg.RSVP_Deadline;
           }
 
-          // 12. Dynamic Story Milestones
           if (data.story && data.story.length > 0) {
             const timelineContainer = document.getElementById('timelineWrapper');
             if (timelineContainer) {
@@ -2905,7 +2888,6 @@
             }
           }
 
-          // 13. Dynamic Gallery Lookbook
           if (data.gallery && data.gallery.length > 0) {
             const galleryContainer = document.getElementById('galleryGrid');
             if (galleryContainer) {
@@ -2918,7 +2900,6 @@
             }
           }
 
-          // 14. Dynamic Entourage
           if (data.entourage && data.entourage.length > 0) {
             const entourageContainer = document.getElementById('entourageContent');
             if (entourageContainer) {
@@ -2931,18 +2912,11 @@
             }
           }
         })
-
-        if (cfg.Song_Title) {
-          const songTitleEl = document.getElementById('songToastTitle');
-          if (songTitleEl) songTitleEl.innerText = cfg.Song_Title;
-        }
         .catch(err => console.log("Using local cache:", err));
     }
-
-    // Call once on page load
     syncSheetData();
 
-    // 2. Envelope Animation
+    // --- 5. ENVELOPE OPENING & AUDIO ---
     const envelopeScreen = document.getElementById('envelopeScreen');
     const envelopeStage = document.getElementById('envelopeStage');
     const audio = document.getElementById('weddingAudio');
@@ -2960,6 +2934,7 @@
         disc.classList.add('playing');
         musicText.innerText = "Music";
         isPlaying = true;
+        setTimeout(() => { showSongToast(5000); }, 800);
       }).catch(err => console.log(err));
 
       envelopeStage.classList.add('is-opened');
@@ -2975,16 +2950,18 @@
         disc.classList.remove('playing');
         musicText.innerText = "Play";
         isPlaying = false;
+        hideSongToast();
       } else {
         audio.play().then(() => {
           disc.classList.add('playing');
           musicText.innerText = "Music";
           isPlaying = true;
+          showSongToast(4000);
         }).catch(e => console.log(e));
       }
     });
 
-    // 3. Velvet Scroll Reveal
+    // --- 6. SCROLL REVEAL OBSERVER ---
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -2997,24 +2974,26 @@
       observer.observe(card);
     });
 
-    // 4. Entourage Accordion
+    // --- 7. ENTOURAGE ACCORDION ---
     const entourageBtn = document.getElementById('toggleEntourageBtn');
     const entourageContent = document.getElementById('entourageContent');
     const entourageBtnText = document.getElementById('entourageBtnText');
     let entourageOpen = false;
 
-    entourageBtn.addEventListener('click', function() {
-      entourageOpen = !entourageOpen;
-      if (entourageOpen) {
-        entourageContent.classList.add('is-open');
-        entourageBtnText.innerText = "Hide Entourage & Sponsors ▲";
-      } else {
-        entourageContent.classList.remove('is-open');
-        entourageBtnText.innerText = "View Entourage & Sponsors ▼";
-      }
-    });
+    if (entourageBtn && entourageContent) {
+      entourageBtn.addEventListener('click', function() {
+        entourageOpen = !entourageOpen;
+        if (entourageOpen) {
+          entourageContent.classList.add('is-open');
+          entourageBtnText.innerText = "Hide Entourage & Sponsors ▲";
+        } else {
+          entourageContent.classList.remove('is-open');
+          entourageBtnText.innerText = "View Entourage & Sponsors ▼";
+        }
+      });
+    }
 
-    // 5. Attendance & Companion Toggle UX
+    // --- 8. ATTENDANCE & COMPANION FORM LOGIC ---
     let selectedAttendance = 'Joyfully Accepts';
     const seatsGroup = document.getElementById('seatsGroup');
     const companionGroup = document.getElementById('companionFieldsGroup');
@@ -3027,15 +3006,16 @@
       selectedAttendance = val;
 
       if (val === 'Regretfully Declines') {
-        seatsGroup.style.display = 'none';
-        companionGroup.style.display = 'none';
+        if (seatsGroup) seatsGroup.style.display = 'none';
+        if (companionGroup) companionGroup.style.display = 'none';
       } else {
-        seatsGroup.style.display = 'block';
+        if (seatsGroup) seatsGroup.style.display = 'block';
         updateCompanionInputs();
       }
     }
 
     function updateCompanionInputs() {
+      if (!seatSelect || !companionContainer || !companionGroup) return;
       const seats = parseInt(seatSelect.value, 10);
       companionContainer.innerHTML = '';
 
@@ -3043,7 +3023,8 @@
         companionGroup.style.display = 'none';
       } else if (seats === 2) {
         companionGroup.style.display = 'block';
-        document.getElementById('companionLabel').innerText = "Companion's Full Name";
+        const lbl = document.getElementById('companionLabel');
+        if (lbl) lbl.innerText = "Companion's Full Name";
         companionContainer.innerHTML = `
           <div class="companion-input-wrap">
             <input type="text" class="companion-name-input" placeholder="e.g. Maria Santos" required />
@@ -3051,7 +3032,8 @@
         `;
       } else if (seats === 3) {
         companionGroup.style.display = 'block';
-        document.getElementById('companionLabel').innerText = "Names of 2 Companions";
+        const lbl = document.getElementById('companionLabel');
+        if (lbl) lbl.innerText = "Names of 2 Companions";
         companionContainer.innerHTML = `
           <div class="companion-input-wrap" style="margin-bottom: 12px;">
             <input type="text" class="companion-name-input" placeholder="1st Companion Full Name" required />
@@ -3062,9 +3044,9 @@
         `;
       }
     }
-    seatSelect.addEventListener('change', updateCompanionInputs);
+    if (seatSelect) seatSelect.addEventListener('change', updateCompanionInputs);
 
-    // Auto-populate guest name, seats, and VIP banner from URL (e.g. ?guest=Ninong+Pepito&seats=2)
+    // --- 9. URL AUTO-POPULATION & VIP GUEST GREETING ---
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const guest = params.get('guest');
@@ -3072,12 +3054,9 @@
       
       if (guest) {
         const cleanGuestName = decodeURIComponent(guest.replace(/\+/g, ' '));
-        
-        // 1. Fill RSVP Form Input
         const nameInput = document.getElementById('guestName');
         if (nameInput) nameInput.value = cleanGuestName;
-    
-        // 2. Show Personalized VIP Banner
+
         const vipBanner = document.getElementById('vipBanner');
         const vipGuestName = document.getElementById('vipGuestName');
         const vipSeatPill = document.getElementById('vipSeatPill');
@@ -3085,30 +3064,28 @@
         if (vipBanner && vipGuestName) {
           vipGuestName.innerText = cleanGuestName;
           vipBanner.style.display = 'block';
-    
-          if (seats && ['1', '2', '3'].includes(seats)) {
+
+          if (seats && ['1', '2', '3'].includes(seats) && vipSeatPill) {
             const seatText = seats === '1' 
               ? "We have joyfully reserved 1 seat in your honor" 
               : `We have joyfully reserved ${seats} seats in your honor`;
             vipSeatPill.innerText = seatText;
           }
         }
-    
-        // 3. Update Envelope Eyebrow
+
         const envEyebrow = document.querySelector('.card-eyebrow');
         if (envEyebrow) {
           envEyebrow.innerText = `Exclusively Invited: ${cleanGuestName}`;
         }
       }
-    
-      // Pre-select seat count
-      if (seats && ['1', '2', '3'].includes(seats)) {
+
+      if (seats && ['1', '2', '3'].includes(seats) && seatSelect) {
         seatSelect.value = seats;
         updateCompanionInputs();
       }
     });
 
-    // 6. Countdown Timer
+    // --- 10. COUNTDOWN TIMER ---
     function updateCountdown() {
       const now = new Date().getTime();
       const diff = weddingDate - now;
@@ -3133,7 +3110,7 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // 7. Rose Petal Shower on Submit
+    // --- 11. ROSE CONFETTI TRIGGER ---
     function triggerRosePetals() {
       try {
         confetti({
@@ -3152,242 +3129,111 @@
       }
     }
 
-    // 8. RSVP Submit & Resubmit Flow
+    // --- 12. RSVP SUBMIT & RESUBMIT FLOW ---
     const form = document.getElementById("rsvpForm");
     const successModal = document.getElementById("successModal");
     const btn = document.getElementById("submitBtn");
     const btnSpinner = document.getElementById("btnSpinner");
     const btnSubmitText = document.getElementById("btnSubmitText");
 
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      btn.disabled = true;
-      btnSpinner.style.display = "inline-block";
-      btnSubmitText.innerText = "Saving Your RSVP...";
-
-      const companionInputs = document.querySelectorAll('.companion-name-input');
-      const companionNamesList = [];
-      companionInputs.forEach(input => {
-        if (input.value.trim()) companionNamesList.push(input.value.trim());
-      });
-      const companionsString = companionNamesList.length > 0 ? companionNamesList.join(' • ') : 'None';
-
-      const data = {
-        name: document.getElementById("guestName").value,
-        attendance: selectedAttendance,
-        guests: selectedAttendance === 'Joyfully Accepts' ? seatSelect.value : 0,
-        companions: selectedAttendance === 'Joyfully Accepts' ? companionsString : 'None',
-        message: document.getElementById("message").value
-      };
-
-      fetch(GOOGLE_SCRIPT_API_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      }).then(() => {
-        form.classList.add("fade-out");
+    if (form) {
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
         
+        btn.disabled = true;
+        btnSpinner.style.display = "inline-block";
+        btnSubmitText.innerText = "Saving Your RSVP...";
+
+        const companionInputs = document.querySelectorAll('.companion-name-input');
+        const companionNamesList = [];
+        companionInputs.forEach(input => {
+          if (input.value.trim()) companionNamesList.push(input.value.trim());
+        });
+        const companionsString = companionNamesList.length > 0 ? companionNamesList.join(' • ') : 'None';
+
+        const data = {
+          name: document.getElementById("guestName").value,
+          attendance: selectedAttendance,
+          guests: selectedAttendance === 'Joyfully Accepts' ? seatSelect.value : 0,
+          companions: selectedAttendance === 'Joyfully Accepts' ? companionsString : 'None',
+          message: document.getElementById("message").value
+        };
+
+        fetch(GOOGLE_SCRIPT_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).then(() => {
+          form.classList.add("fade-out");
+          
+          setTimeout(() => {
+            form.style.display = "none";
+            form.classList.remove("fade-out");
+            
+            successModal.style.display = "block";
+            successModal.classList.add("fade-in");
+            
+            triggerRosePetals();
+          }, 400);
+
+        }).catch(err => {
+          alert("Something went wrong while submitting. Please try again!");
+          btn.disabled = false;
+          btnSpinner.style.display = "none";
+          btnSubmitText.innerText = "Send My RSVP";
+        });
+      });
+    }
+
+    const resubmitBtn = document.getElementById("btnResubmit");
+    if (resubmitBtn) {
+      resubmitBtn.addEventListener("click", function() {
+        successModal.classList.remove("fade-in");
+        successModal.classList.add("fade-out");
+
         setTimeout(() => {
-          form.style.display = "none";
-          form.classList.remove("fade-out");
+          successModal.style.display = "none";
+          successModal.classList.remove("fade-out");
+
+          document.getElementById("guestName").value = "";
+          document.getElementById("message").value = "";
+          seatSelect.value = "1";
+          updateCompanionInputs();
+          setAttendance(document.querySelectorAll('.attend-card')[0], 'Joyfully Accepts');
           
-          successModal.style.display = "block";
-          successModal.classList.add("fade-in");
-          
-          triggerRosePetals();
-        }, 400);
+          btn.disabled = false;
+          btnSpinner.style.display = "none";
+          btnSubmitText.innerText = "Send My RSVP";
 
-      }).catch(err => {
-        alert("Something went wrong while submitting. Please try again!");
-        btn.disabled = false;
-        btnSpinner.style.display = "none";
-        btnSubmitText.innerText = "Send My RSVP";
+          form.style.display = "block";
+          form.classList.add("fade-in");
+          setTimeout(() => form.classList.remove("fade-in"), 400);
+        }, 350);
       });
-    });
+    }
 
-    document.getElementById("btnResubmit").addEventListener("click", function() {
-      successModal.classList.remove("fade-in");
-      successModal.classList.add("fade-out");
+    // --- 13. FAQ ACCORDION TOGGLE ---
+    function toggleFaq(item) {
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    }
 
-      setTimeout(() => {
-        successModal.style.display = "none";
-        successModal.classList.remove("fade-out");
-
-        document.getElementById("guestName").value = "";
-        document.getElementById("message").value = "";
-        seatSelect.value = "1";
-        updateCompanionInputs();
-        setAttendance(document.querySelectorAll('.attend-card')[0], 'Joyfully Accepts');
-        
-        btn.disabled = false;
-        btnSpinner.style.display = "none";
-        btnSubmitText.innerText = "Send My RSVP";
-
-        form.style.display = "block";
-        form.classList.add("fade-in");
-        setTimeout(() => form.classList.remove("fade-in"), 400);
-      }, 350);
-    });
-
-    // --- ALL-IN-ONE SELF-CONTAINED LIGHTBOX ---
-    (function initLightbox() {
-      if (!document.getElementById('lightbox-auto-style')) {
-        const style = document.createElement('style');
-        style.id = 'lightbox-auto-style';
-        style.textContent = `
-          .gallery-polaroid { cursor: pointer !important; }
-          #autoLightbox {
-            position: fixed !important;
-            inset: 0 !important;
-            z-index: 999999 !important;
-            background: rgba(10, 16, 27, 0.94) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-          }
-          #autoLightbox.is-active {
-            display: flex !important;
-          }
-          .auto-lightbox-frame {
-            max-width: 90vw;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-          .auto-lightbox-frame img {
-            max-width: 100%;
-            max-height: 75vh;
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(221, 165, 165, 0.4);
-            object-fit: contain;
-            display: block;
-          }
-          .auto-lightbox-caption {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            color: #F4DADA;
-            font-size: 1.35rem;
-            margin-top: 14px;
-            letter-spacing: 0.05em;
-            text-align: center;
-          }
-          .auto-lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(221, 165, 165, 0.5);
-            color: #FFFFFF;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            line-height: 1;
-            transition: all 0.2s ease;
-          }
-          .auto-lightbox-close:hover {
-            background: #DDA5A5;
-            transform: scale(1.08);
-          }
-        `;
-        document.head.appendChild(style);
-      }
-
-      let modal = document.getElementById('autoLightbox');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'autoLightbox';
-        modal.innerHTML = `
-          <div class="auto-lightbox-close" title="Close">&times;</div>
-          <div class="auto-lightbox-frame">
-            <img src="" alt="Enlarged photo">
-            <div class="auto-lightbox-caption"></div>
-          </div>
-        `;
-        document.body.appendChild(modal);
-      }
-
-      const modalImg = modal.querySelector('img');
-      const modalCaption = modal.querySelector('.auto-lightbox-caption');
-      const closeBtn = modal.querySelector('.auto-lightbox-close');
-
-      function openModal(src, caption) {
-        modalImg.src = src;
-        modalCaption.textContent = caption || '';
-        modal.classList.add('is-active');
-      }
-
-      function closeModal() {
-        modal.classList.remove('is-active');
-        setTimeout(() => { modalImg.src = ''; }, 200);
-      }
-
-      closeBtn.onclick = closeModal;
-
-      modal.onclick = function(e) {
-        if (e.target === modal) closeModal();
-      };
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('is-active')) {
-          closeModal();
-        }
-      });
-
-      document.addEventListener('click', function(e) {
-        const polaroid = e.target.closest('.gallery-polaroid');
-        if (!polaroid) return;
-
-        const img = polaroid.querySelector('img');
-        const cap = polaroid.querySelector('.polaroid-caption');
-
-        if (img && img.src) {
-          openModal(img.src, cap ? cap.innerText : '');
-        }
-      });
-    })();
-
-    // --- 1-TAP CLIPBOARD COPY FOR GIFT GUIDE ---
+    // --- 14. 1-TAP COPY HELPERS ---
     function copyAccountNumber(elementId, btnElement) {
       const accText = document.getElementById(elementId).innerText.replace(/\s+/g, '');
       navigator.clipboard.writeText(accText).then(() => {
         const originalText = btnElement.innerHTML;
         btnElement.classList.add('copied');
         btnElement.innerHTML = "<span>✓ Copied!</span>";
-        
         setTimeout(() => {
           btnElement.classList.remove('copied');
           btnElement.innerHTML = originalText;
         }, 2000);
-      }).catch(err => {
-        console.log("Copy failed:", err);
       });
     }
 
-    // --- FAQ ACCORDION TOGGLE ---
-    function toggleFaq(item) {
-      const isActive = item.classList.contains('active');
-      // Close other open items
-      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
-      if (!isActive) {
-        item.classList.add('active');
-      }
-    }
-    
-    // --- 1-TAP HASHTAG COPY ---
     function copyHashtag(id, btn) {
       const tag = document.getElementById(id).innerText;
       navigator.clipboard.writeText(tag).then(() => {
@@ -3400,21 +3246,19 @@
       });
     }
 
-    // --- FORCED DIRECT IMAGE DOWNLOAD HELPER ---
+    // --- 15. DIRECT IMAGE DOWNLOAD HELPER ---
     async function downloadQrImage(imgElementId, filename, btnElement) {
       const img = document.getElementById(imgElementId);
       if (!img || !img.src) return;
-    
+
       const originalText = btnElement ? btnElement.innerHTML : '';
-      if (btnElement) {
-        btnElement.innerHTML = "<span>⏳ Saving...</span>";
-      }
-    
+      if (btnElement) btnElement.innerHTML = "<span>⏳ Saving...</span>";
+
       try {
         const response = await fetch(img.src);
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);
-    
+
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = blobUrl;
@@ -3423,113 +3267,47 @@
         a.click();
         window.URL.revokeObjectURL(blobUrl);
         document.body.removeChild(a);
-    
+
         if (btnElement) {
           btnElement.innerHTML = "<span>✓ Saved!</span>";
           setTimeout(() => { btnElement.innerHTML = originalText; }, 2000);
         }
       } catch (error) {
-        // If browser blocks fetch, open image directly in a new tab as fallback
         window.open(img.src, '_blank');
         if (btnElement) btnElement.innerHTML = originalText;
       }
     }
 
-    // --- ATTIRE LOOKBOOK MODAL CONTROLS ---
+    // --- 16. ATTIRE LOOKBOOK MODAL CONTROLS ---
     function openLookbook() {
       const modal = document.getElementById('lookbookModal');
       if (modal) modal.classList.add('is-active');
     }
-    
     function closeLookbook() {
       const modal = document.getElementById('lookbookModal');
       if (modal) modal.classList.remove('is-active');
     }
-    
     function closeLookbookOnBackdrop(e) {
-      if (e.target.id === 'lookbookModal') {
-        closeLookbook();
-      }
+      if (e.target.id === 'lookbookModal') closeLookbook();
     }
 
-    // --- AMBIENT FLOATING ROSE PETALS GENERATOR ---
+    // --- 17. AMBIENT FLOATING ROSE PETALS ---
     (function createFloatingPetals() {
       const container = document.getElementById('petalsContainer');
       if (!container) return;
-
-      const petalCount = 8; // Subtle, elegant count
+      const petalCount = 8;
       for (let i = 0; i < petalCount; i++) {
         const petal = document.createElement('div');
         petal.className = 'floating-petal';
-
-        const size = Math.random() * 10 + 12; // 12px to 22px
+        const size = Math.random() * 10 + 12;
         petal.style.width = `${size}px`;
         petal.style.height = `${size * 1.3}px`;
         petal.style.left = `${Math.random() * 95}vw`;
-        petal.style.animationDuration = `${Math.random() * 8 + 12}s`; // 12s to 20s drift
+        petal.style.animationDuration = `${Math.random() * 8 + 12}s`;
         petal.style.animationDelay = `${Math.random() * 10}s`;
-
         container.appendChild(petal);
       }
     })();
-
-    // --- NOW PLAYING SONG TOAST CONTROLS ---
-    let songToastTimer = null;
-
-    function showSongToast(duration = 5000) {
-      const toast = document.getElementById('songToast');
-      if (!toast) return;
-
-      toast.classList.add('is-visible');
-      if (songToastTimer) clearTimeout(songToastTimer);
-      
-      songToastTimer = setTimeout(() => {
-        toast.classList.remove('is-visible');
-      }, duration);
-    }
-
-    function hideSongToast() {
-      const toast = document.getElementById('songToast');
-      if (toast) toast.classList.remove('is-visible');
-    }
-
-    // Trigger toast when envelope opens
-    envelopeStage.addEventListener('click', function() {
-      if (hasOpened) return;
-      hasOpened = true;
-
-      audio.play().then(() => {
-        disc.classList.add('playing');
-        musicText.innerText = "Music";
-        isPlaying = true;
-        // Show song toast for 5 seconds after opening
-        setTimeout(() => { showSongToast(5000); }, 800);
-      }).catch(err => console.log(err));
-
-      envelopeStage.classList.add('is-opened');
-
-      setTimeout(() => {
-        envelopeScreen.classList.add('opened');
-      }, 1900);
-    });
-
-    // Also show toast briefly when manually unpausing music
-    toggleBtn.addEventListener('click', function() {
-      if (isPlaying) {
-        audio.pause();
-        disc.classList.remove('playing');
-        musicText.innerText = "Play";
-        isPlaying = false;
-        hideSongToast();
-      } else {
-        audio.play().then(() => {
-          disc.classList.add('playing');
-          musicText.innerText = "Music";
-          isPlaying = true;
-          showSongToast(4000);
-        }).catch(e => console.log(e));
-      }
-    });
   </script>
 
   <!-- ATTIRE LOOKBOOK MODAL -->
