@@ -1593,6 +1593,140 @@
     @media (max-width: 600px) {
       .gift-grid { grid-template-columns: 1fr; }
     }
+
+    /* --- 4. UNPLUGGED CEREMONY, HASHTAG & FAQ STYLING --- */
+    .unplugged-box {
+      background: var(--pink-soft);
+      border: 1px dashed var(--pink-accent);
+      border-radius: 16px;
+      padding: 22px 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .unplugged-icon {
+      font-size: 1.8rem;
+      color: var(--pink-accent);
+      margin-bottom: 6px;
+    }
+    
+    .unplugged-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    
+    .unplugged-text {
+      font-size: 0.86rem;
+      color: var(--navy);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    
+    /* Hashtag Pill */
+    .hashtag-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    
+    .hashtag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--navy);
+      color: var(--white);
+      padding: 10px 22px;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(26, 43, 73, 0.15);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    
+    .btn-copy-tag {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #FFFFFF;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-copy-tag:hover {
+      background: var(--pink-accent);
+      border-color: var(--pink-accent);
+    }
+    
+    .btn-copy-tag.copied {
+      background: #4CAF50;
+      border-color: #4CAF50;
+    }
+    
+    /* FAQ Accordion */
+    .faq-list {
+      text-align: left;
+      margin-top: 14px;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--beige-border);
+      padding: 16px 0;
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--navy);
+      transition: color 0.2s ease;
+    }
+    
+    .faq-question:hover {
+      color: var(--pink-accent);
+    }
+    
+    .faq-icon {
+      font-size: 1.1rem;
+      color: var(--pink-accent);
+      transition: transform 0.3s ease;
+    }
+    
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg); /* Turns + into × */
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.4s ease;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -1917,9 +2051,9 @@
             <button type="button" class="btn-gift-action" onclick="copyAccountNumber('gcashAcc', this)">
               <span>📋 Copy Number</span>
             </button>
-            <a href="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GCash-Payment" id="gcashQrDownload" target="_blank" download="GCash-QR.png" class="btn-gift-action">
+            <button type="button" class="btn-gift-action" onclick="downloadQrImage('gcashQrImg', 'GCash-QR.png', this)">
               <span>⬇ Save QR</span>
-            </a>
+            </button>
           </div>
         </div>
     
@@ -1938,9 +2072,84 @@
             <button type="button" class="btn-gift-action" onclick="copyAccountNumber('bankAcc', this)">
               <span>📋 Copy Number</span>
             </button>
-            <a href="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Bank-Payment" id="bankQrDownload" target="_blank" download="Bank-QR.png" class="btn-gift-action">
+            <button type="button" class="btn-gift-action" onclick="downloadQrImage('bankQrImg', 'Bank-QR.png', this)">
               <span>⬇ Save QR</span>
-            </a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. WEDDING REMINDERS & FAQ CARD -->
+    <section class="card reveal-card" id="faqSection">
+      <span class="section-eyebrow">Important Details</span>
+      <h2 class="foil-text">Reminders & FAQs</h2>
+      
+      <div class="flourish-divider">
+        <span class="flourish-line"></span>
+        <span class="flourish-ornament">❦</span>
+        <span class="flourish-line"></span>
+      </div>
+    
+      <!-- Unplugged Ceremony Callout -->
+      <div class="unplugged-box">
+        <div class="unplugged-icon">📷 🔕</div>
+        <h3 class="unplugged-title">An Unplugged Ceremony</h3>
+        <p class="unplugged-text">
+          We kindly invite you to be fully present with us during our sacred ceremony. Please keep cameras and phones silenced and tucked away until we are joyfully pronounced husband and wife.
+        </p>
+      </div>
+    
+      <!-- Official Hashtag -->
+      <div class="hashtag-wrapper">
+        <p style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">
+          Tag your photos and reels with
+        </p>
+        <div class="hashtag-pill">
+          <span id="weddingHashtag">#LawrenceFoundHisSharm</span>
+          <button type="button" class="btn-copy-tag" onclick="copyHashtag('weddingHashtag', this)">Copy</button>
+        </div>
+      </div>
+    
+      <!-- FAQ Accordion List -->
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>What time should we arrive?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Our ceremony starts promptly at 2:00 PM. We recommend arriving 30 to 45 minutes earlier to allow ample time for comfortable parking and church seating.
+          </div>
+        </div>
+    
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Can I bring a plus-one or children?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Due to venue capacity and guest list limitations, our celebration is strictly an intimate affair. We can only accommodate the specific seats reserved for you in your invitation RSVP.
+          </div>
+        </div>
+    
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Is there parking available?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes! Designated parking spaces are available at both The Fairview Park United Methodist Church and Blue Gardens Events Venue.
+          </div>
+        </div>
+    
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Can we take photos during the reception?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes, absolutely! Snap all the joyful memories during cocktail hour and the reception, and don’t forget to tag us using our official hashtag <strong>#LawrenceFoundHisSharm</strong>.
           </div>
         </div>
       </div>
@@ -2758,6 +2967,64 @@
       }).catch(err => {
         console.log("Copy failed:", err);
       });
+    }
+
+    // --- FAQ ACCORDION TOGGLE ---
+    function toggleFaq(item) {
+      const isActive = item.classList.contains('active');
+      // Close other open items
+      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    }
+    
+    // --- 1-TAP HASHTAG COPY ---
+    function copyHashtag(id, btn) {
+      const tag = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(tag).then(() => {
+        btn.classList.add('copied');
+        btn.innerText = "✓ Copied!";
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerText = "Copy";
+        }, 2000);
+      });
+    }
+
+    // --- FORCED DIRECT IMAGE DOWNLOAD HELPER ---
+    async function downloadQrImage(imgElementId, filename, btnElement) {
+      const img = document.getElementById(imgElementId);
+      if (!img || !img.src) return;
+    
+      const originalText = btnElement ? btnElement.innerHTML : '';
+      if (btnElement) {
+        btnElement.innerHTML = "<span>⏳ Saving...</span>";
+      }
+    
+      try {
+        const response = await fetch(img.src);
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+    
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+    
+        if (btnElement) {
+          btnElement.innerHTML = "<span>✓ Saved!</span>";
+          setTimeout(() => { btnElement.innerHTML = originalText; }, 2000);
+        }
+      } catch (error) {
+        // If browser blocks fetch, open image directly in a new tab as fallback
+        window.open(img.src, '_blank');
+        if (btnElement) btnElement.innerHTML = originalText;
+      }
     }
   </script>
 </body>
