@@ -2039,13 +2039,13 @@
         <!-- GCash Card -->
         <div class="gift-account-card">
           <p class="gift-bank-name" id="gcashTitle">GCash</p>
-          <p class="gift-account-name" id="gcashName">Lawrence M. / Sharmaine T.</p>
+          <p class="gift-account-name" id="gcashName">Lawrence Justine Maqui</p>
           
           <div class="gift-qr-wrapper">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GCash-Payment" id="gcashQrImg" alt="GCash QR Code" class="gift-qr-img">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GCash" id="gcashQrImg" alt="GCash QR Code" class="gift-qr-img">
           </div>
     
-          <span class="gift-account-number" id="gcashAcc">0917 123 4567</span>
+          <span class="gift-account-number" id="gcashAcc">0976 108 8123</span>
     
           <div class="gift-btn-group">
             <button type="button" class="btn-gift-action" onclick="copyAccountNumber('gcashAcc', this)">
@@ -2057,22 +2057,22 @@
           </div>
         </div>
     
-        <!-- Bank Card (BDO / BPI / Maya) -->
+        <!-- Bank Card (Gotyme Bank) -->
         <div class="gift-account-card">
-          <p class="gift-bank-name" id="bankTitle">BDO Unibank</p>
-          <p class="gift-account-name" id="bankName">Lawrence Maqui</p>
+          <p class="gift-bank-name" id="bankTitle">Gotyme Bank</p>
+          <p class="gift-account-name" id="bankName">Lawrence Justine Maqui</p>
           
           <div class="gift-qr-wrapper">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Bank-Payment" id="bankQrImg" alt="Bank QR Code" class="gift-qr-img">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Bank" id="bankQrImg" alt="Bank QR Code" class="gift-qr-img">
           </div>
     
-          <span class="gift-account-number" id="bankAcc">1234 5678 9012</span>
+          <span class="gift-account-number" id="bankAcc">0150 0014 5750</span>
     
           <div class="gift-btn-group">
             <button type="button" class="btn-gift-action" onclick="copyAccountNumber('bankAcc', this)">
               <span>📋 Copy Number</span>
             </button>
-            <button type="button" class="btn-gift-action" onclick="downloadQrImage('bankQrImg', 'Bank-QR.png', this)">
+            <button type="button" class="btn-gift-action" onclick="downloadQrImage('bankQrImg', 'Gotyme-QR.png', this)">
               <span>⬇ Save QR</span>
             </button>
           </div>
@@ -2513,22 +2513,40 @@
             `).join('');
           }
 
-          // DYNAMIC GIFT GUIDE / QR SYNC FROM GOOGLE SHEETS
-          if (cfg.GCash_Title) document.getElementById('gcashTitle').innerText = cfg.GCash_Title;
-          if (cfg.GCash_Name) document.getElementById('gcashName').innerText = cfg.GCash_Name;
-          if (cfg.GCash_Number) document.getElementById('gcashAcc').innerText = cfg.GCash_Number;
-          if (cfg.GCash_QR_URL) {
-            document.getElementById('gcashQrImg').src = cfg.GCash_QR_URL;
-            document.getElementById('gcashQrDownload').href = cfg.GCash_QR_URL;
+          // --- HELPER TO CONVERT GOOGLE DRIVE LINKS ON CLIENT-SIDE ---
+          function formatDriveImage(url) {
+            if (!url || typeof url !== 'string') return url;
+            if (url.includes('drive.google.com')) {
+              const match = url.match(/[-\w]{25,}/);
+              if (match) return `https://lh3.googleusercontent.com/d/${match[0]}=w1000`;
+            }
+            return url;
           }
           
-          if (cfg.Bank_Title) document.getElementById('bankTitle').innerText = cfg.Bank_Title;
-          if (cfg.Bank_Name) document.getElementById('bankName').innerText = cfg.Bank_Name;
-          if (cfg.Bank_Number) document.getElementById('bankAcc').innerText = cfg.Bank_Number;
-          if (cfg.Bank_QR_URL) {
-            document.getElementById('bankQrImg').src = cfg.Bank_QR_URL;
-            document.getElementById('bankQrDownload').href = cfg.Bank_QR_URL;
-          }
+          // Inside syncSheetData() -> .then(data => { ...
+          const cfg = data.config || {};
+          
+          // GCash Safe Hydration
+          const gTitle = document.getElementById('gcashTitle');
+          const gName = document.getElementById('gcashName');
+          const gAcc = document.getElementById('gcashAcc');
+          const gImg = document.getElementById('gcashQrImg');
+          
+          if (gTitle && cfg.GCash_Title) gTitle.innerText = cfg.GCash_Title;
+          if (gName && cfg.GCash_Name) gName.innerText = cfg.GCash_Name;
+          if (gAcc && cfg.GCash_Number) gAcc.innerText = cfg.GCash_Number;
+          if (gImg && cfg.GCash_QR_URL) gImg.src = formatDriveImage(cfg.GCash_QR_URL);
+          
+          // Gotyme Bank Safe Hydration
+          const bTitle = document.getElementById('bankTitle');
+          const bName = document.getElementById('bankName');
+          const bAcc = document.getElementById('bankAcc');
+          const bImg = document.getElementById('bankQrImg');
+          
+          if (bTitle && cfg.Bank_Title) bTitle.innerText = cfg.Bank_Title;
+          if (bName && cfg.Bank_Name) bName.innerText = cfg.Bank_Name;
+          if (bAcc && cfg.Bank_Number) bAcc.innerText = cfg.Bank_Number;
+          if (bImg && cfg.Bank_QR_URL) bImg.src = formatDriveImage(cfg.Bank_QR_URL);
         })
         .catch(err => console.log("Using local cache:", err));
     }
