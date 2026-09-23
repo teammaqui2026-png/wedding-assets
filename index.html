@@ -3453,28 +3453,30 @@
       }
     })();
 
-    // --- 18. TOUCH-SWIPEABLE FULL-SCREEN GALLERY LIGHTBOX LOGIC ---
+    // --- 18. BULLETPROOF TOUCH-SWIPEABLE GALLERY LIGHTBOX ---
     let galleryImages = [];
     let currentImageIndex = 0;
 
-    function refreshGalleryList() {
-      galleryImages = [];
-      document.querySelectorAll('.gallery-polaroid').forEach((polaroid, index) => {
+    // Collect all current photos dynamically from the grid
+    function getLiveGalleryData() {
+      const list = [];
+      document.querySelectorAll('.gallery-polaroid').forEach(polaroid => {
         const img = polaroid.querySelector('img');
         const cap = polaroid.querySelector('.polaroid-caption');
         if (img && img.src) {
-          galleryImages.push({
+          list.push({
             src: img.src,
-            caption: cap ? cap.innerText : ''
+            caption: cap ? cap.innerText.trim() : ''
           });
-          // Attach click index
-          polaroid.onclick = () => openTouchLightbox(index);
         }
       });
+      return list;
     }
 
     function openTouchLightbox(index) {
-      if (!galleryImages.length) refreshGalleryList();
+      galleryImages = getLiveGalleryData();
+      if (!galleryImages.length) return;
+
       currentImageIndex = index;
       renderLightboxImage();
       
@@ -3511,6 +3513,19 @@
       renderLightboxImage();
     }
 
+    // Global Click Delegation: Automatically catches clicks on any photo (even from Google Sheets)
+    document.addEventListener('click', function(e) {
+      const polaroid = e.target.closest('.gallery-polaroid');
+      if (!polaroid) return;
+
+      const allPolaroids = Array.from(document.querySelectorAll('.gallery-polaroid'));
+      const clickedIndex = allPolaroids.indexOf(polaroid);
+
+      if (clickedIndex !== -1) {
+        openTouchLightbox(clickedIndex);
+      }
+    });
+
     // Touch Swipe Gesture Detection for Mobile
     let touchStartX = 0;
     let touchEndX = 0;
@@ -3523,10 +3538,17 @@
 
       lightboxModal.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipeGesture();
+        const swipeDistance = touchEndX - touchStartX;
+        if (Math.abs(swipeDistance) > 45) {
+          if (swipeDistance < 0) {
+            navigateLightbox(1); // Swiped Left -> Next
+          } else {
+            navigateLightbox(-1); // Swiped Right -> Previous
+          }
+        }
       }, { passive: true });
 
-      // Click outside photo to close
+      // Click dark backdrop to close
       lightboxModal.addEventListener('click', (e) => {
         if (e.target.id === 'touchLightbox' || e.target.id === 'lightboxContentBox') {
           closeTouchLightbox();
@@ -3534,20 +3556,7 @@
       });
     }
 
-    function handleSwipeGesture() {
-      const swipeDistance = touchEndX - touchStartX;
-      if (Math.abs(swipeDistance) > 45) {
-        if (swipeDistance < 0) {
-          // Swiped Left -> Next Photo
-          navigateLightbox(1);
-        } else {
-          // Swiped Right -> Previous Photo
-          navigateLightbox(-1);
-        }
-      }
-    }
-
-    // Keyboard Navigation (Esc, Left Arrow, Right Arrow)
+    // Keyboard Arrow & Esc Navigation
     document.addEventListener('keydown', (e) => {
       const modal = document.getElementById('touchLightbox');
       if (modal && modal.classList.contains('is-active')) {
@@ -3555,11 +3564,6 @@
         if (e.key === 'ArrowRight') navigateLightbox(1);
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
       }
-    });
-
-    // Initialize gallery list on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(refreshGalleryList, 500);
     });
   </script>
 
