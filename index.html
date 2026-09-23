@@ -2013,6 +2013,146 @@
       color: #FFFFFF;
       font-weight: 500;
     }
+
+    /* --- 3. LUXURY TOUCH-SWIPEABLE GALLERY LIGHTBOX --- */
+    .gallery-polaroid {
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .gallery-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      background: rgba(10, 16, 27, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      user-select: none;
+      touch-action: pan-y;
+    }
+    
+    .gallery-lightbox.is-active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .lightbox-content-box {
+      position: relative;
+      max-width: 90vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .lightbox-img-wrap {
+      position: relative;
+      max-width: 100%;
+      max-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .lightbox-img-wrap img {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      border: 1.5px solid rgba(221, 165, 165, 0.45);
+      object-fit: contain;
+      display: block;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    
+    .lightbox-meta {
+      margin-top: 14px;
+      text-align: center;
+    }
+    
+    .lightbox-caption-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: #F4DADA;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    
+    .lightbox-counter-pill {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #A59B8E;
+      font-weight: 600;
+    }
+    
+    /* Close & Nav Buttons */
+    .lightbox-btn-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(221, 165, 165, 0.45);
+      color: #FFFFFF;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    
+    .lightbox-btn-close:hover {
+      background: var(--pink-accent);
+      transform: scale(1.08);
+    }
+    
+    .lightbox-nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(221, 165, 165, 0.45);
+      color: #FFFFFF;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    
+    .lightbox-nav-arrow:hover {
+      background: var(--pink-accent);
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .lightbox-nav-arrow.prev { left: 16px; }
+    .lightbox-nav-arrow.next { right: 16px; }
+    
+    @media (max-width: 600px) {
+      .lightbox-nav-arrow { display: none; } /* On mobile, users swipe smoothly with touch */
+      .lightbox-img-wrap img { max-height: 65vh; }
+    }
   </style>
 </head>
 <body>
@@ -3312,6 +3452,115 @@
         container.appendChild(petal);
       }
     })();
+
+    // --- 18. TOUCH-SWIPEABLE FULL-SCREEN GALLERY LIGHTBOX LOGIC ---
+    let galleryImages = [];
+    let currentImageIndex = 0;
+
+    function refreshGalleryList() {
+      galleryImages = [];
+      document.querySelectorAll('.gallery-polaroid').forEach((polaroid, index) => {
+        const img = polaroid.querySelector('img');
+        const cap = polaroid.querySelector('.polaroid-caption');
+        if (img && img.src) {
+          galleryImages.push({
+            src: img.src,
+            caption: cap ? cap.innerText : ''
+          });
+          // Attach click index
+          polaroid.onclick = () => openTouchLightbox(index);
+        }
+      });
+    }
+
+    function openTouchLightbox(index) {
+      if (!galleryImages.length) refreshGalleryList();
+      currentImageIndex = index;
+      renderLightboxImage();
+      
+      const modal = document.getElementById('touchLightbox');
+      if (modal) modal.classList.add('is-active');
+    }
+
+    function closeTouchLightbox() {
+      const modal = document.getElementById('touchLightbox');
+      if (modal) modal.classList.remove('is-active');
+    }
+
+    function renderLightboxImage() {
+      if (!galleryImages.length) return;
+      if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
+      if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
+
+      const item = galleryImages[currentImageIndex];
+      const imgEl = document.getElementById('lightboxMainImg');
+      const capEl = document.getElementById('lightboxCaptionText');
+      const countEl = document.getElementById('lightboxCounter');
+
+      if (imgEl) {
+        imgEl.style.opacity = '0.4';
+        imgEl.src = item.src;
+        imgEl.onload = () => { imgEl.style.opacity = '1'; };
+      }
+      if (capEl) capEl.innerText = item.caption || '';
+      if (countEl) countEl.innerText = `Photo ${currentImageIndex + 1} of ${galleryImages.length}`;
+    }
+
+    function navigateLightbox(direction) {
+      currentImageIndex += direction;
+      renderLightboxImage();
+    }
+
+    // Touch Swipe Gesture Detection for Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const lightboxModal = document.getElementById('touchLightbox');
+
+    if (lightboxModal) {
+      lightboxModal.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      lightboxModal.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+      }, { passive: true });
+
+      // Click outside photo to close
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target.id === 'touchLightbox' || e.target.id === 'lightboxContentBox') {
+          closeTouchLightbox();
+        }
+      });
+    }
+
+    function handleSwipeGesture() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (Math.abs(swipeDistance) > 45) {
+        if (swipeDistance < 0) {
+          // Swiped Left -> Next Photo
+          navigateLightbox(1);
+        } else {
+          // Swiped Right -> Previous Photo
+          navigateLightbox(-1);
+        }
+      }
+    }
+
+    // Keyboard Navigation (Esc, Left Arrow, Right Arrow)
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('touchLightbox');
+      if (modal && modal.classList.contains('is-active')) {
+        if (e.key === 'Escape') closeTouchLightbox();
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      }
+    });
+
+    // Initialize gallery list on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(refreshGalleryList, 500);
+    });
   </script>
 
   <!-- ATTIRE LOOKBOOK MODAL -->
@@ -3349,6 +3598,23 @@
   
       <div class="attire-notice" style="display: block; margin-top: 10px;">
         🤍 <em>Kindly note that all shades of pure white, ivory, and cream are reserved exclusively for our bride.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOUCH-SWIPEABLE FULL-SCREEN GALLERY LIGHTBOX -->
+  <div class="gallery-lightbox" id="touchLightbox">
+    <button type="button" class="lightbox-btn-close" id="lightboxCloseBtn" onclick="closeTouchLightbox()">&times;</button>
+    <button type="button" class="lightbox-nav-arrow prev" onclick="navigateLightbox(-1)" aria-label="Previous photo">&#8249;</button>
+    <button type="button" class="lightbox-nav-arrow next" onclick="navigateLightbox(1)" aria-label="Next photo">&#8250;</button>
+
+    <div class="lightbox-content-box" id="lightboxContentBox">
+      <div class="lightbox-img-wrap">
+        <img id="lightboxMainImg" src="" alt="Enlarged engagement photo">
+      </div>
+      <div class="lightbox-meta">
+        <p class="lightbox-caption-text" id="lightboxCaptionText"></p>
+        <span class="lightbox-counter-pill" id="lightboxCounter">Photo 1 of 3</span>
       </div>
     </div>
   </div>
