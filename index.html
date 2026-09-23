@@ -209,7 +209,6 @@
       z-index: 6;
       cursor: pointer;
       transition: opacity 0.3s ease, transform 0.3s ease;
-      animation: sealGlow 3s infinite ease-in-out;
     }
 
     .env-center-seal::before {
@@ -625,6 +624,29 @@
       margin: 0 auto;
     }
 
+    /* --- Save The Date Video Card --- */
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0F1A2C;
+      border: 2px solid rgba(221, 165, 165, 0.45);
+      box-shadow: 0 14px 35px rgba(26, 43, 73, 0.15);
+      margin: 10px 0;
+    }
+
+    .video-container iframe,
+    .video-container #youtubePlayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     /* Gallery */
     .gallery-grid {
       display: grid;
@@ -640,6 +662,7 @@
       padding: 8px 8px 18px;
       box-shadow: 0 6px 18px rgba(26, 43, 73, 0.06);
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
 
     .gallery-polaroid:hover {
@@ -1211,95 +1234,6 @@
       .card { padding: 38px 20px; }
       .footer-names { font-size: 1.45rem; }
     }
-
-    /* --- Gallery Lightbox --- */
-    .gallery-polaroid {
-      cursor: pointer;
-    }
-
-    .gallery-lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 10002;
-      background: rgba(10, 16, 27, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 20px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      user-select: none;
-    }
-
-    .gallery-lightbox.is-active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .lightbox-frame {
-      position: relative;
-      max-width: 90vw;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transform: scale(0.92);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-lightbox.is-active .lightbox-frame {
-      transform: scale(1);
-    }
-
-    .lightbox-frame img {
-      max-width: 100%;
-      max-height: 75vh;
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(221, 165, 165, 0.4);
-      object-fit: contain;
-      display: block;
-    }
-
-    .lightbox-caption-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      color: #F4DADA;
-      font-size: 1.35rem;
-      margin-top: 14px;
-      letter-spacing: 0.05em;
-      text-align: center;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    }
-
-    .lightbox-close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(221, 165, 165, 0.4);
-      color: #FFFFFF;
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      line-height: 1;
-    }
-
-    .lightbox-close-btn:hover {
-      background: var(--pink-accent);
-      color: var(--white);
-      transform: scale(1.08);
-    }
   </style>
 </head>
 <body>
@@ -1411,7 +1345,27 @@
       </div>
     </section>
 
-    <!-- 2. MINI ENGAGEMENT PHOTO LOOKBOOK -->
+    <!-- 2. SAVE THE DATE VIDEO -->
+    <section class="card reveal-card" id="saveTheDateSection">
+      <span class="section-eyebrow">A Glimpse of Our Love</span>
+      <h2>Save The Date</h2>
+      
+      <div class="flourish-divider">
+        <span class="flourish-line"></span>
+        <span class="flourish-ornament">❦</span>
+        <span class="flourish-line"></span>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+        Press play to watch our teaser video
+      </p>
+
+      <div class="video-container">
+        <div id="youtubePlayer"></div>
+      </div>
+    </section>
+
+    <!-- 3. MINI ENGAGEMENT PHOTO LOOKBOOK -->
     <section class="card reveal-card">
       <span class="section-eyebrow">Captured Moments</span>
       <h2>Our Journey</h2>
@@ -1438,7 +1392,7 @@
       </div>
     </section>
 
-    <!-- 3. The Celebration Card -->
+    <!-- 4. The Celebration Card -->
     <section class="card reveal-card" id="celebration">
       <span class="section-eyebrow">Join Us In</span>
       <h2>The Celebration</h2>
@@ -1514,7 +1468,7 @@
       </div>
     </section>
 
-    <!-- 4. Attire & Color Palette Card -->
+    <!-- 5. Attire & Color Palette Card -->
     <section class="card reveal-card">
       <span class="section-eyebrow">What to Wear</span>
       <h2>Attire & Palette</h2>
@@ -1558,7 +1512,7 @@
       </div>
     </section>
 
-    <!-- 5. WEDDING ENTOURAGE & SPONSORS -->
+    <!-- 6. WEDDING ENTOURAGE & SPONSORS -->
     <section class="card reveal-card">
       <span class="section-eyebrow">With Gratitude</span>
       <h2>Wedding Entourage</h2>
@@ -1603,7 +1557,7 @@
       </div>
     </section>
 
-    <!-- 6. SENIOR-FRIENDLY RSVP FORM -->
+    <!-- 7. SENIOR-FRIENDLY RSVP FORM -->
     <section class="card reveal-card" id="rsvpSection">
       <span class="section-eyebrow">Celebrate With Us</span>
       <h2>RSVP</h2>
@@ -1724,6 +1678,60 @@
     }
     setCustomFavicon();
 
+    // --- YOUTUBE IFRAME API & BACKGROUND AUDIO SYNC ---
+    let currentYouTubeId = "dQw4w9WgXcQ"; // Default fallback (Update with your Unlisted Video ID or in Google Sheets)
+    let ytPlayer = null;
+
+    // Inject YouTube IFrame API
+    const ytScript = document.createElement('script');
+    ytScript.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(ytScript);
+
+    function parseYouTubeId(input) {
+      if (!input) return null;
+      input = input.trim();
+      if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = input.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : input;
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+      ytPlayer = new YT.Player('youtubePlayer', {
+        videoId: currentYouTubeId,
+        playerVars: {
+          'playsinline': 1,
+          'rel': 0,
+          'modestbranding': 1
+        },
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    };
+
+    function onPlayerStateChange(event) {
+      // 1 = Playing
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (isPlaying) {
+          audio.pause();
+          disc.classList.remove('playing');
+          musicText.innerText = "Play";
+          isPlaying = false;
+        }
+      }
+      // 2 = Paused, 0 = Ended
+      else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        if (hasOpened && !isPlaying) {
+          audio.play().then(() => {
+            disc.classList.add('playing');
+            musicText.innerText = "Music";
+            isPlaying = true;
+          }).catch(err => console.log(err));
+        }
+      }
+    }
+
     // --- LIVE GOOGLE APPS SCRIPT API INTEGRATION ---
     const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwwWFCoCa89gJqEOp65QY7cm-afjpiFJn1c4miWINlBKT_az-E8bKmMLkF177jzPbxG/exec";
 
@@ -1741,7 +1749,6 @@
       return null;
     }
 
-    // 1. Live Fetch Sheet Data
     function syncSheetData() {
       fetch(GOOGLE_SCRIPT_API_URL + "?nocache=" + new Date().getTime())
         .then(response => response.json())
@@ -1772,6 +1779,18 @@
           if (cfg.Reception_Venue) document.getElementById('receptionVenue').innerText = cfg.Reception_Venue;
           if (cfg.Reception_Note) document.getElementById('receptionNote').innerText = cfg.Reception_Note;
           if (cfg.Map_Reception_URL) document.getElementById('receptionMapLink').href = cfg.Map_Reception_URL;
+
+          // YouTube Video Sync
+          const sheetVideo = cfg.YouTube_Video_ID || cfg.Video_URL;
+          if (sheetVideo) {
+            const parsedId = parseYouTubeId(sheetVideo);
+            if (parsedId) {
+              currentYouTubeId = parsedId;
+              if (ytPlayer && ytPlayer.cueVideoById) {
+                ytPlayer.cueVideoById(parsedId);
+              }
+            }
+          }
 
           if (cfg.Countdown_Target) {
             const parsedTarget = parseDateSafe(cfg.Countdown_Target);
@@ -2084,7 +2103,6 @@
 
     // --- ALL-IN-ONE SELF-CONTAINED LIGHTBOX ---
     (function initLightbox() {
-      // 1. Ensure CSS is injected
       if (!document.getElementById('lightbox-auto-style')) {
         const style = document.createElement('style');
         style.id = 'lightbox-auto-style';
@@ -2158,7 +2176,6 @@
         document.head.appendChild(style);
       }
 
-      // 2. Ensure the Lightbox Modal exists in the document
       let modal = document.getElementById('autoLightbox');
       if (!modal) {
         modal = document.createElement('div');
@@ -2200,7 +2217,6 @@
         }
       });
 
-      // 3. Global Click Listener for any photo
       document.addEventListener('click', function(e) {
         const polaroid = e.target.closest('.gallery-polaroid');
         if (!polaroid) return;
@@ -2214,14 +2230,5 @@
       });
     })();
   </script>
-
-  <!-- Gallery Lightbox Modal -->
-  <div class="gallery-lightbox" id="galleryLightbox">
-    <button type="button" class="lightbox-close-btn" id="lightboxClose" aria-label="Close photo">&times;</button>
-    <div class="lightbox-frame">
-      <img id="lightboxImg" src="" alt="Enlarged photo">
-      <p class="lightbox-caption-text" id="lightboxCaption"></p>
-    </div>
-  </div>
 </body>
 </html>
